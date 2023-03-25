@@ -1,0 +1,261 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+div.header {
+    width: 100%;
+    height: 72px;
+    margin: 0 auto;
+    padding:16px;
+    box-shadow: 0px 0px 16px -8px #888;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    z-index: 10;
+    position: relative;
+}
+
+div.header > h1 {
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+.shader {
+    position: absolute;
+    right:0;
+    background-image: linear-gradient(
+        180deg,
+        rgba(255,255,255,1) calc(50% - 80px),
+        rgba(255,0,0,0) calc(50% - 20px),
+        rgba(255,0,0,0) 50%,
+        rgba(255,0,0,0) calc(50% + 20px),
+        rgba(255,255,255,1) calc(50% + 80px)
+    );
+    height: calc(100vh - 72px);
+    width: calc(50vw - 426px);
+    z-index: 5;
+}
+
+div.ticket-container {
+    position: relative;
+    display: inline-flex;
+    width: 100vw;
+    height: calc(100vh - 72px);
+    flex-direction: column;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    flex-wrap: nowrap;
+    align-content: center;
+    /* justify-content: space-around; */
+    align-items: center;
+    margin: 0 auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    position: absolute;
+    top: 72px;
+    left: 0;
+
+}
+
+div.ticket-container::-webkit-scrollbar {
+    display: none;
+}
+
+div.placeholder {
+    min-height: 50vh;
+    max-width: 800px;
+}
+
+div.ticket {
+    position: relative;
+    max-width: 800px;
+    margin: 16px;
+    padding: 16px 0px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 16px -8px #888;
+    scroll-snap-align: center;
+    background-color: #fff;
+    z-index: 3;
+}
+
+div.ticket > h2 {
+    margin: 16px 0;
+}
+
+div.ticket > img {
+    width: 100%;
+    margin: 32px 0;
+    height: auto;
+    box-shadow: 0px 4px 8px -4px #888;
+    transform: scale(1.05);
+    border-radius: 8px;
+    border: #fff 2px;
+    z-index: 10;
+}
+
+div.ticket > div.answers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: space-around;
+    align-items: flex-start;
+    margin: 8px 16px;
+}
+
+div.ticket > div.answers > div.answer {
+    width: 100%;
+    padding: 16px 16px 16px 16px;
+    margin: 8px 0 8px 32px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-shadow: 2px 2px 12px -8px #888;
+    border-radius: 8px;
+    font-size: larger;
+    background-color: #f6f9ff;
+    position: relative;
+}
+
+span.answernum {
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    -ms-transform: translateY(-50%) translateX(-100%);
+    transform: translateY(-50%) translateX(-100%);
+    font-size: x-large;
+    color: #556cf1;
+}
+
+div.ticket > div.answers > div.answer:hover {
+    cursor: pointer;
+    box-shadow: 2px 2px 12px -4px #888;
+}
+
+/* div.ticket.done > div.answers > div.answer {
+    background-color: #fff;
+} */
+
+div.ticket.done > div.answers > div.correct {
+    background-color: #f2fff2;
+}
+div.ticket.done > div.answers > div.incorrect {
+    background-color: #fff1f1;
+}
+
+div.ticket > div.next {
+    position: absolute;
+    bottom: 16px;
+    right: 32px;
+    display: inline-block;
+    cursor: pointer;
+    border-bottom: 1px dotted black;
+    margin: 8px 0;
+}
+
+div.ticket > div.desc {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    margin: 8px 0;
+}
+
+div.ticket > div.desc span {
+    visibility: hidden;
+    min-width: 700px;
+    bottom: 200%;
+    left: 50%;
+    margin-top: -16px;
+    margin-left: -350px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 16px;
+    position: absolute;
+    z-index: 2;
+    font-size: larger;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+div.ticket > div.desc:hover span {
+    visibility: visible;
+}
+
+div.ticket > div.question {
+    padding: 0 32px;
+}
+
+div.ticket > span.num {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    right: -96px;
+    font-size: xx-large;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    z-index: 1;
+    color: #556cf1;
+}
+
+span#goodnum {
+    color: #2cbd2c;
+}
+
+span.allnum {
+    position: fixed;
+    left: calc(50% + 516px);
+    margin: 0;
+    top: calc(36px + 50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-size: xx-large;
+}
+
+.stats {
+    font-size: xx-large;
+}
+
+span.nextexam {
+    font-size: x-large;
+    cursor: pointer;
+    border-bottom: 1px dotted black;
+    margin: 8px 0;
+}
+
+.modal {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: #fff;
+    width: 400px;
+    height: 400px;
+    z-index: 100;
+    -ms-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    padding: 16px 0px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 16px -8px #888;
+}
+
+.loader {
+    display: block;
+    position: relative;
+    top: 100px;
+    left: 100px;
+    background-color: #f6f9ff;
+    width: 200px;
+    height: 200px;
+    z-index: 100;
+    padding: 0;
+    border-radius: 20px;
+    box-shadow: 0px 0px 16px -8px #888;
+}

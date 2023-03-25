@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <title>Georgian Driving Exam</title>
+        <script>
+            var allnum = {{ allnum }};
+            var done = 0;
+            var correct = 0;
+
+            function nextexam(element) {
+                // Show modal with loader
+                var modal = document.createElement('div');
+                modal.classList.add('modal');
+                var loader = document.createElement('div');
+                loader.classList.add('loader');
+                modal.appendChild(loader);
+                //animate loader
+                var i = 0;
+                var interval = setInterval(function() {
+                    loader.style.transform = 'rotate(' + i + 'deg)';
+                    i += 10;
+                    if (i == 360) { i = 0; }
+                }, 50);
+                document.body.appendChild(modal);
+
+                window.location.href = '{{ url_for("update") }}';
+
+            };
+
+            function scrollnext(element) {
+                element.parentElement.nextElementSibling.scrollIntoView(
+                    {behavior: "smooth", block: "center", inline: "center"}
+                )
+            };
+
+            function answerclick(element) {
+                if (!element.parentElement.parentElement.classList.contains('done')) {
+                    element.parentElement.parentElement.classList.add('done');
+                    done += 1;
+                    if (!element.classList.contains('correct')) {
+                        element.classList.add('incorrect');
+                    } else {
+                        correct += 1;
+                        document.getElementById('goodnum').innerHTML = correct;
+                    }
+                    document.getElementById('header').style.backgroundImage = 'linear-gradient(to right, #f2fff2 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (done / allnum * 100) + '%, #ffffff ' + (done / allnum * 100) + '%, #ffffff 100%)';
+                }
+            };
+
+            function keyhandler(event) {
+                // Scroll to next ticket element if pressed space
+                if (event.keyCode == 32) {
+                    event.preventDefault();
+                    var middleElement;
+                    var viewportHeight = document.defaultView.innerHeight;
+
+                    for (var el of document.querySelectorAll('.ticket')) {
+                        var top = el.getBoundingClientRect().top;
+                        var bottom = el.getBoundingClientRect().bottom;
+                        // if an element is more or less in the middle of the viewport
+                        if( bottom > viewportHeight/2 && top < viewportHeight/2 ){
+                            middleElement = el;
+                            break;
+                        }
+                    };
+                    middleElement.nextElementSibling.scrollIntoView(
+                        {behavior: "smooth", block: "center", inline: "center"}
+                    );
+                }
+
+                // Click answer in current centered ticket element based on number pressed on keyboard
+                if (event.keyCode >= 49 && event.keyCode <= 57) {
+
+                    var middleElement;
+                    var viewportHeight = document.defaultView.innerHeight;
+
+                    for (var el of document.querySelectorAll('.ticket')) {
+                        var top = el.getBoundingClientRect().top;
+                        var bottom = el.getBoundingClientRect().bottom;
+                        // if an element is more or less in the middle of the viewport
+                        if( bottom > viewportHeight/2 && top < viewportHeight/2 ){
+                            middleElement = el;
+                            break;
+                        }
+                    };
+                    if (!middleElement.classList.contains('done')) {
+                        middleElement.querySelector('.answers').children[event.keyCode - 49].click();
+                    }
+                }
+
+                // Click answer in current centered ticket element based on number pressed on numberpad
+                if (event.keyCode >= 97 && event.keyCode <= 105) {
+
+                    var middleElement;
+                    var viewportHeight = document.defaultView.innerHeight;
+
+                    for (var el of document.querySelectorAll('.ticket')) {
+                        var top = el.getBoundingClientRect().top;
+                        var bottom = el.getBoundingClientRect().bottom;
+                        // if an element is more or less in the middle of the viewport
+                        if( bottom > viewportHeight/2 && top < viewportHeight/2 ){
+                            middleElement = el;
+                            break;
+                        }
+                    };
+                    if (!middleElement.classList.contains('done')) {
+                        middleElement.querySelector('.answers').children[event.keyCode - 97].click();
+                    }
+                }
+
+            };
+
+            document.addEventListener("keydown", keyhandler);
+
+        </script>
+    </head>
+    <body>
+        <div class="header" id="header">
+            <h1>Georgian Driving Exam</h1>
+        </div>
+        <div class="shader">
+            <span class="allnum">/ {{ allnum }}</span>
+        </div>
+
+        <div class="ticket-container">
+            <div class="placeholder"></div>
+        {% for i, ticket in tickets %}
+            <div class="ticket">
+                <span class="num">{{ i+1 }}</span>
+                <div class="question"><h2>{{ ticket.question }}</h2></div>
+                {% if ticket.image %}
+                <img src="{{ ticket.image }}" alt="Ticket image">
+                {% endif %}
+                <div class="answers">
+                    {% for n, answer in ticket.answers.items() %}
+                    <div onclick="answerclick(this)" class="answer {{'correct' if answer.real_id == ticket.correct else ''}}">
+                        <span class="answernum">{{ n }}</span>
+                        {{ answer.text }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="desc">Детали<span>{{ ticket.description }}</span></div>
+                <div class="next" onclick="scrollnext(this)">Далее</div>
+            </div>
+        {% endfor %}
+        <div class="ticket">
+            <div class="question"><h2>Экзамен закончен</h2></div>
+            <span class="stats" id="goodnum">0</span><span class="stats"> / {{ allnum }}</span>
+            <div style="margin: 16px;"><span class="nextexam" onclick="nextexam(this)">Ещё раз</span></div>
+        </div>
+        <div class="placeholder"></div>
+        </div>
+    </body>
+</html>
