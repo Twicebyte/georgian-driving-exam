@@ -332,19 +332,6 @@ span.nextexam {
         font-size: 1.0em;
     }
 
-    /* div.ticket > span.num {
-        display: none;
-    } */
-
-    /* span.allnum {
-        display: none;
-    } */
-
-    /* span.mobilenum {
-        font-size: large;
-        display: inline;
-    } */
-
     div.ticket > div.question {
         padding: 0 32px;
         position: relative;
