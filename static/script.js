@@ -18,12 +18,12 @@ function nextexam(element) {
     }, 50);
     document.body.appendChild(modal);
 
-    window.location.href = '{{ url_for("update") }}';
+    window.location.href = '/update';
 
 };
 
 function logout(element) {
-    window.location.href = '{{ url_for("logout") }}';
+    window.location.href = '/logout';
 
 };
 
