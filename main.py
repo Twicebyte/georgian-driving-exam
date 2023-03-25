@@ -1,9 +1,10 @@
+import functools
 import json
 import os
 
-import requests
+import requests as req
 from bs4 import BeautifulSoup
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, jsonify, redirect, render_template, request, session
 from googletrans import Translator
 
 from google.oauth2 import id_token
@@ -12,7 +13,6 @@ from google.auth.transport import requests
 
 app = Flask(__name__)
 app.secret_key = b'445c1e98c90420acbf41320ff5f89674f75f18d345fd25fc267bb03afb40c136'
-
 
 
 class Ticket:
@@ -27,7 +27,9 @@ class Ticket:
         else:
             self.answers = json.loads(answers)
             soup = BeautifulSoup(desc, 'html.parser')
-            self.description = self.Translator.translate(soup.find_all('p')[1].text, dest='ru', src='ka').text
+            text = soup.find_all('p')[1].text
+            # text = self.Translator.translate(text, dest='ru', src='ka').text
+            self.description = text
         self.correct = correct_answer
 
     @property
@@ -57,7 +59,7 @@ def get_tickets(force=False):
             if "id" in ticket
         ]
     else:
-        response = requests.post(
+        response = req.post(
             url="https://teoria.on.ge/tickets",
             data={
                 "cat_id":2,
@@ -93,30 +95,38 @@ def get_tickets(force=False):
 #     response.headers['Content-Security-Policy-Report-Only'] = "script-src https://accounts.google.com/gsi/client; frame-src https://accounts.google.com/gsi/; connect-src https://accounts.google.com/gsi/;"
 #     return response
 
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if not session.get('user') and not app.debug:
+            return render_template('login.html')
+        return view(**kwargs)
+    return wrapped_view
+
 @app.route("/")
+@login_required
 def index():
-    if not session.get("user"):
-        return render_template('login.html')
     tickets = get_tickets()
     return render_template('index.html', tickets=enumerate(tickets), allnum=len(tickets))
 
 @app.route("/login", methods=["POST"])
 def login():
-    token = request.form.get("idtoken")
+    token = request.form.get("credential")
     try:
         CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        print(idinfo)
         session['user'] = idinfo['sub']
     except ValueError:
-        # Invalid token
+        print('login failed')
         pass
     print(request.form)
     return redirect("/")
 
 @app.route("/update")
+@login_required
 def update():
-    if not session.get("user"):
-        return render_template('login.html')
     get_tickets(force=True)
     return redirect("/")
 
