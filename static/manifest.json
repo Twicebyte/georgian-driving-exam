@@ -2,7 +2,6 @@
     "$schema": "https://json.schemastore.org/web-manifest-combined.json",
     "name": "Georgian Driving Exam",
     "short_name": "Georgian Driving Exam",
-    "start_url": ".",
     "display": "standalone",
     "background_color": "#fff",
     "description": "Usable app for training for Georgian Driving Exam",
@@ -14,5 +13,6 @@
         "type": "image/png",
         "purpose": "any maskable"
       }
-    ]
+    ],
+    "start_url": "/"
   }
