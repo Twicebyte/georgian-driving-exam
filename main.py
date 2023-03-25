@@ -110,6 +110,7 @@ def index():
     tickets = get_tickets()
     return render_template('index.html', tickets=enumerate(tickets), allnum=len(tickets))
 
+
 @app.route("/login", methods=["POST"])
 def login():
     token = request.form.get("credential")

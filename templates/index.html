@@ -29,6 +29,11 @@
 
             };
 
+            function logout(element) {
+                window.location.href = '{{ url_for("logout") }}';
+
+            };
+
             function scrollnext(element) {
                 element.parentElement.nextElementSibling.scrollIntoView(
                     {behavior: "smooth", block: "center", inline: "center"}
@@ -126,6 +131,11 @@
 
         <div class="ticket-container">
             <div class="placeholder"></div>
+
+            <div class="ticket">
+                <div class="question"><h2>Экзамен начинается</h2></div>
+                <div style="margin: 16px;"><span class="nextexam" onclick="logout(this)">Выйти</span></div>
+            </div>
         {% for i, ticket in tickets %}
             <div class="ticket">
                 <span class="num">{{ i+1 }}</span>

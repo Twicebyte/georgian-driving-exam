@@ -4,30 +4,34 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <title>Georgian Driving Exam</title>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->
     </head>
     <body>
         <div class="header" id="header">
             <h1>Georgian Driving Exam</h1>
         </div>
 
-        <div class="ticket">
-            <div id="g_id_onload"
-                    data-client_id="703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
-                    data-context="signin"
-                    data-ux_mode="popup"
-                    data-login_uri="https://georgian-driving-exam-7jwb8.ondigitalocean.app/login"
-                    data-auto_select="true"
-                    data-itp_support="true">
-            </div>
+        <div class="ticket-container">
+            <div class="placeholder"></div>
+            <div class="ticket" style="text-align: center;">
+                <div id="g_id_onload"
+                        data-client_id="703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
+                        data-context="signin"
+                        data-ux_mode="popup"
+                        data-login_uri="https://georgian-driving-exam-7jwb8.ondigitalocean.app/login"
+                        data-auto_select="true"
+                        data-itp_support="true">
+                </div>
 
-            <div class="g_id_signin"
-                    data-type="icon"
-                    data-shape="square"
-                    data-theme="outline"
-                    data-text="signin"
-                    data-size="large">
+                <div class="g_id_signin"
+                        data-type="icon"
+                        data-shape="square"
+                        data-theme="outline"
+                        data-text="signin"
+                        data-size="large">
+                </div>
             </div>
+            <div class="placeholder"></div>
         </div>
     </body>
 </html>
