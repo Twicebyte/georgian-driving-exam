@@ -6,6 +6,7 @@
     "display": "standalone",
     "background_color": "#fff",
     "description": "Usable app for training for Georgian Driving Exam",
+    "theme_color": "#f6f9ff",
     "icons": [
       {
         "src": "maskable_icon.png",
