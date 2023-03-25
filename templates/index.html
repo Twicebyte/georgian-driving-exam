@@ -12,50 +12,27 @@
         <title>Georgian Driving Exam</title>
     </head>
     <body>
-        <script>var allnum = {{ allnum }};</script>
         <script src="{{ url_for('static', filename='script.js') }}" defer></script>
         <div class="header" id="header">
             <h1>Georgian Driving Exam</h1>
         </div>
         <div class="shader">
-            <span class="allnum">/ {{ allnum }}</span>
+            <span class="allnum" id="allnum"></span>
         </div>
 
         <div class="ticket-container">
             <div class="placeholder"></div>
-
-            <div class="ticket">
-                <div style="margin: 32px;"><h2>Экзамен начинается</h2></div>
-                <div style="margin: 16px; display: flex; justify-content: space-around;">
-                    <span class="hidden nextexam" id="butInstall">Установить</span>
-                    <span class="nextexam" onclick="logout(this)">Выйти</span>
-                </div>
-            </div>
-        {% for i, ticket in tickets %}
-            <div class="ticket">
-                <span class="num">{{ i+1 }}</span>
-                <div class="question"><span class="mobilenum">{{ i+1 }}</span><h2>{{ ticket.question }}</h2></div>
-                {% if ticket.image %}
-                <img src="{{ ticket.image }}" alt="Ticket image">
-                {% endif %}
-                <div class="answers">
-                    {% for n, answer in ticket.answers.items() %}
-                    <div onclick="answerclick(this)" class="answer {{'correct' if answer.real_id == ticket.correct else ''}}">
-                        <span class="answernum">{{ n }}</span>
-                        {{ answer.text }}
+            <section>
+                <div class="ticket">
+                    <div style="margin: 32px;"><h2>Экзамен начинается</h2></div>
+                    <div style="margin: 16px; display: flex; justify-content: space-around;">
+                        <span class="hidden nextexam" id="butInstall">Установить</span>
+                        <span class="nextexam" onclick="logout(this)">Выйти</span>
                     </div>
-                    {% endfor %}
                 </div>
-                <div class="desc">Детали<span>{{ ticket.description }}</span></div>
-                <div class="next" onclick="scrollnext(this)">Далее</div>
-            </div>
-        {% endfor %}
-        <div class="ticket">
-            <div style="margin: 32px;"><h3>Экзамен закончен</h2></div>
-            <span class="stats" id="goodnum">0</span><span class="stats"> / {{ allnum }}</span>
-            <div style="margin: 16px;"><span class="nextexam" onclick="nextexam(this)">Ещё раз</span></div>
-        </div>
-        <div class="placeholder"></div>
+            </section>
+            <section id="stack"></section>
+            <div class="placeholder"></div>
         </div>
     </body>
 </html>

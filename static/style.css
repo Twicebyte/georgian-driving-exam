@@ -3,6 +3,7 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     text-align: center;
+    user-select: none;
 }
 
 div.header {
@@ -267,8 +268,7 @@ span.nextexam {
 .loader {
     display: block;
     position: relative;
-    top: 100px;
-    left: 100px;
+    margin: -16px 0;
     background-color: #f6f9ff;
     width: 200px;
     height: 200px;
@@ -281,6 +281,12 @@ span.nextexam {
 @media (max-width: 500px) {
     h2 {
         font-size: 1.0em;
+    }
+
+    div.ticket > div.desc span {
+        min-width: 90vw;
+        margin-left: -45vw;
+        font-size: 0.9em;
     }
 
     div.ticket > img {

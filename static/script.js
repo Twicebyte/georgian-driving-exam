@@ -1,6 +1,7 @@
 
 var done = 0;
 var correct = 0;
+var allnum = 0;
 
 function nextexam(element) {
     // Show modal with loader
@@ -116,12 +117,9 @@ document.addEventListener("keydown", keyhandler);
 const butInstall = document.getElementById("butInstall");
 
 window.addEventListener('beforeinstallprompt', (event) => {
-    // Prevent the mini-infobar from appearing on mobile.
     event.preventDefault();
     console.log('👍', 'beforeinstallprompt', event);
-    // Stash the event so it can be triggered later.
     window.deferredPrompt = event;
-    // Remove the 'hidden' class from the install button container.
     butInstall.classList.toggle('hidden', false);
 });
 
@@ -129,28 +127,101 @@ butInstall.addEventListener('click', async () => {
     console.log('👍', 'butInstall-clicked');
     const promptEvent = window.deferredPrompt;
     if (!promptEvent) {
-      // The deferred prompt isn't available.
       return;
     }
-    // Show the install prompt.
     promptEvent.prompt();
-    // Log the result
     const result = await promptEvent.userChoice;
     console.log('👍', 'userChoice', result);
-    // Reset the deferred prompt variable, since
-    // prompt() can only be called once.
     window.deferredPrompt = null;
-    // Hide the install button.
     butInstall.classList.toggle('hidden', true);
 });
 
 window.addEventListener('appinstalled', (event) => {
     console.log('👍', 'appinstalled', event);
-    // Clear the deferredPrompt so it can be garbage collected
     window.deferredPrompt = null;
 });
-/* Only register a service worker if it's supported */
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/static/service-worker.js");
 }
 
+const stack = document.getElementById('stack');
+
+function recreate() {
+    var modal = document.createElement('div');
+    modal.classList.add('ticket');
+    var loader = document.createElement('div');
+    loader.classList.add('loader');
+    modal.appendChild(loader);
+    //animate loader
+    var i = 0;
+    var interval = setInterval(function() {
+        loader.style.transform = 'rotate(' + i + 'deg)';
+        i += 10;
+        if (i == 360) { i = 0; }
+    }, 50);
+    stack.appendChild(modal);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/tickets');
+    xhr.onreadystatechange  = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            clearInterval(interval);
+            stack.removeChild(modal);
+            var data = JSON.parse(this.responseText);
+            allnum = data.length;
+            for (var i = 0; i < data.length; i++) {
+                var ticket = data[i];
+                var element = document.createElement('div');
+                element.classList.add('ticket');
+                element.innerHTML = `
+                    <span class="num">${i+1}</span>
+                    <div class="question"><span class="mobilenum">${i+1}</span><h2>${ticket.question}</h2></div>
+                    ${ticket.image ? `<img src="${ticket.image}" alt="Ticket image">` : ''}
+                    <div class="answers">
+                        ${Object.entries(ticket.answers).map(([n, answer]) => `<div onclick="answerclick(this)" class="answer ${answer.real_id == ticket.correct ? 'correct' : ''}">
+                            <span class="answernum">${n}</span>
+                            ${answer.text}
+                        </div>`).join('')}
+                    </div>
+                    <div class="desc">Детали<span class="descinfo">${ticket.desc}</span></div>
+                    <div class="next" onclick="scrollnext(this)">Далее</div>
+                `;
+                stack.appendChild(element);
+            };
+            var element = document.createElement('div');
+            element.classList.add('ticket');
+            element.innerHTML = `
+                <div class="ticket">
+                    <div style="margin: 32px;"><h3>Экзамен закончен</h2></div>
+                    <span class="stats" id="goodnum">0</span><span class="stats"> / ${allnum}</span>
+                    <div style="margin: 16px;"><span class="nextexam" onclick="nextexam(this)">Ещё раз</span></div>
+                </div>
+            `;
+            stack.appendChild(element);
+            document.getElementById('allnum').innerHTML = ` / ${allnum}`;
+
+            //Translate all descriptions from georgian to russian
+            elements = document.getElementsByClassName('descinfo');
+            for (let element of elements) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/translate');
+                //Set payload to element text
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange  = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        element.innerHTML = JSON.parse(this.responseText).text;
+                    }
+                };
+                xhr.send(JSON.stringify({text: element.innerHTML}));
+            }
+        }
+    };
+    xhr.send();
+
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Starting content assembly")
+    recreate();
+});
