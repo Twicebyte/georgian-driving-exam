@@ -4,7 +4,7 @@ import os
 
 import requests as req
 from bs4 import BeautifulSoup
-from flask import Flask, jsonify, redirect, render_template, request, session
+from flask import Flask, g, jsonify, redirect, render_template, request, session
 from googletrans import Translator
 
 from google.oauth2 import id_token
@@ -87,7 +87,10 @@ def login():
         CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
         print(idinfo)
-        session['user'] = idinfo['sub']
+        g['user_email'] = idinfo['email']
+        g['user_name'] = idinfo['name']
+        g['user_picture'] = idinfo['picture']
+        session['user'] = idinfo['email']
     except ValueError:
         print('login failed')
         pass
