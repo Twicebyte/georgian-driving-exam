@@ -23,15 +23,21 @@
         <div class="ticket-container">
             <div class="placeholder"></div>
             <section>
-                <div class="ticket">
-                    <div style="margin: 32px;"><h2>Экзамен начинается</h2></div>
-                    <div style="margin: 16px; display: flex; justify-content: space-around;">
+                <div class="ticket" style="width: 80vw; max-width: 600px;">
+                    <div class="headercontainer"><h2>Меню</h2></div>
+                    <div class="linklist">
                         <span class="hidden nextexam" id="butInstall">Установить</span>
                         <span class="nextexam" onclick="logout(this)">Выйти</span>
                     </div>
                 </div>
             </section>
-            <section id="stack"></section>
+            <section id="stack">
+                <div class="ticket">
+                    <div class="linklist">
+                        <span class="nextexam" onclick="recreate()">Начать экзамен</span>
+                    </div>
+                </div>
+            </section>
             <div class="placeholder"></div>
         </div>
     </body>

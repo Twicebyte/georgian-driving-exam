@@ -148,6 +148,8 @@ if ("serviceWorker" in navigator) {
 const stack = document.getElementById('stack');
 
 function recreate() {
+    stack.innerHTML = '';
+
     var modal = document.createElement('div');
     modal.classList.add('ticket');
     var loader = document.createElement('div');
@@ -195,7 +197,7 @@ function recreate() {
                 <div class="ticket">
                     <div style="margin: 32px;"><h3>Экзамен закончен</h2></div>
                     <span class="stats" id="goodnum">0</span><span class="stats"> / ${allnum}</span>
-                    <div style="margin: 16px;"><span class="nextexam" onclick="nextexam(this)">Ещё раз</span></div>
+                    <div style="margin: 16px;"><span class="nextexam" onclick="recreate()">Ещё раз</span></div>
                 </div>
             `;
             stack.appendChild(element);
@@ -221,7 +223,7 @@ function recreate() {
 
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Starting content assembly")
-    recreate();
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//     console.log("Starting content assembly")
+//     recreate();
+// });

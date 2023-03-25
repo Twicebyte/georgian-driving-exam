@@ -17,12 +17,18 @@ div.header {
     -webkit-box-sizing: border-box;
     z-index: 10;
     position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-div.header > h1 {
+h1 {
     font-size: 2em;
     margin: 0;
     padding: 0;
+    user-select: none;
 }
 
 .shader {
@@ -86,6 +92,7 @@ div.ticket {
 
 div.ticket > h2 {
     margin: 16px 0;
+    user-select: none;
 }
 
 div.ticket > img {
@@ -121,6 +128,7 @@ div.ticket > div.answers > div.answer {
     font-size: larger;
     background-color: #f6f9ff;
     position: relative;
+    user-select: none;
 }
 
 span.answernum {
@@ -131,6 +139,7 @@ span.answernum {
     transform: translateY(-50%) translateX(-100%);
     font-size: x-large;
     color: #556cf1;
+    user-select: none;
 }
 
 div.ticket > div.answers > div.answer:hover {
@@ -184,6 +193,7 @@ div.ticket > div.desc span {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    user-select: none;
 }
 
 div.ticket > div.desc:hover span {
@@ -193,6 +203,7 @@ div.ticket > div.desc:hover span {
 div.ticket > div.question {
     padding: 0 32px;
     position: relative;
+    user-select: none;
 }
 
 div.ticket > span.num {
@@ -218,6 +229,7 @@ span.mobilenum {
     color: #556cf1;
     text-anchor: middle;
     display: none;
+    user-select: none;
 }
 
 span#goodnum {
@@ -278,9 +290,36 @@ span.nextexam {
     box-shadow: 0px 0px 16px -8px #888;
 }
 
+.headercontainer {
+    margin: 32px;
+}
+
+.linklist {
+    margin: 16px;
+    display: flex;
+    justify-content: space-around;
+}
+
 @media (max-width: 500px) {
+
+    .headercontainer {
+        margin: 8px;
+    }
+
+    .linklist {
+        margin: 8px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
     h2 {
         font-size: 1.0em;
+    }
+
+    div.ticket {
+        padding: 8px;
     }
 
     div.ticket > div.desc span {
@@ -295,6 +334,7 @@ span.nextexam {
 
     div.ticket > div.answers > div.answer {
         font-size: 0.9em;
+        padding: 8px;
     }
 
     div.ticket > span.num {
@@ -305,18 +345,18 @@ span.nextexam {
         display: none;
     }
 
-    span.mobilenum {
-        font-size: large;
-        display: inline;
-    }
-
     div.ticket > div.question {
-        padding: 0 32px;
+        padding: 0 8px;
         position: relative;
-        margin-left: 48px;
-        padding: 16px;
     }
 
+    div.ticket > div.next {
+        bottom: 8px;
+    }
+
+    span.nextexam {
+        font-size: medium;
+    }
 
   }
 
