@@ -86,47 +86,47 @@ def get_tickets(force=False):
         json.dump([ticket.dump for ticket in tickets], open("tickets.json", "w"))
     return tickets
 
-@app.after_request
-def add_header(response):
-    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' 'unsafe-inline';"
-    response.headers['Cross-Origin-Opener-Policy'] = "same-origin-allow-popups"
-    response.headers['Content-Security-Policy-Report-Only'] = "script-src https://accounts.google.com/gsi/client; frame-src https://accounts.google.com/gsi/; connect-src https://accounts.google.com/gsi/;"
-    return response
+# @app.after_request
+# def add_header(response):
+#     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+#     response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' 'unsafe-inline';"
+#     response.headers['Cross-Origin-Opener-Policy'] = "same-origin-allow-popups"
+#     response.headers['Content-Security-Policy-Report-Only'] = "script-src https://accounts.google.com/gsi/client; frame-src https://accounts.google.com/gsi/; connect-src https://accounts.google.com/gsi/;"
+#     return response
 
 @app.route("/")
 def index():
-    if not session.get("user"):
-        return render_template('login.html')
+    # if not session.get("user"):
+    #     return render_template('login.html')
     tickets = get_tickets()
     return render_template('index.html', tickets=enumerate(tickets), allnum=len(tickets))
 
-@app.route("/login", methods=["POST"])
-def login():
-    token = request.form.get("idtoken")
-    try:
-        CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-        session['user'] = idinfo['sub']
-    except ValueError:
-        # Invalid token
-        pass
-    print(request.form)
-    return redirect("/")
+# @app.route("/login", methods=["POST"])
+# def login():
+#     token = request.form.get("idtoken")
+#     try:
+#         CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
+#         idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+#         session['user'] = idinfo['sub']
+#     except ValueError:
+#         # Invalid token
+#         pass
+#     print(request.form)
+#     return redirect("/")
 
 @app.route("/update")
 def update():
-    if not session.get("user"):
-        return render_template('login.html')
+    # if not session.get("user"):
+    #     return render_template('login.html')
     get_tickets(force=True)
     return redirect("/")
 
 
-@app.route('/logout')
-def logout():
-    # remove the username from the session if it's there
-    session.pop('user', None)
-    return redirect("/")
+# @app.route('/logout')
+# def logout():
+#     # remove the username from the session if it's there
+#     session.pop('user', None)
+#     return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
