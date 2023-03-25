@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 from flask import Flask, redirect, render_template, request, session
 from googletrans import Translator
 
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
+
 app = Flask(__name__)
 app.secret_key = b'445c1e98c90420acbf41320ff5f89674f75f18d345fd25fc267bb03afb40c136'
 
@@ -82,6 +86,14 @@ def get_tickets(force=False):
         json.dump([ticket.dump for ticket in tickets], open("tickets.json", "w"))
     return tickets
 
+@app.after_request
+def add_header(response):
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' 'unsafe-inline';"
+    response.headers['Cross-Origin-Opener-Policy'] = "same-origin-allow-popups"
+    response.headers['Content-Security-Policy-Report-Only'] = "script-src https://accounts.google.com/gsi/client; frame-src https://accounts.google.com/gsi/; connect-src https://accounts.google.com/gsi/;"
+    return response
+
 @app.route("/")
 def index():
     if not session.get("user"):
@@ -91,8 +103,15 @@ def index():
 
 @app.route("/login", methods=["POST"])
 def login():
+    token = request.form.get("idtoken")
+    try:
+        CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        session['user'] = idinfo['sub']
+    except ValueError:
+        # Invalid token
+        pass
     print(request.form)
-    session['user'] = ''
     return redirect("/")
 
 @app.route("/update")
