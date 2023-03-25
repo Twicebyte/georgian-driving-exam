@@ -87,10 +87,8 @@ def login():
         CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
         print(idinfo)
-        g['user_email'] = idinfo['email']
-        g['user_name'] = idinfo['name']
-        g['user_picture'] = idinfo['picture']
         session['user'] = idinfo['email']
+        session['pic'] = idinfo['picture']
     except ValueError:
         print('login failed')
         pass
