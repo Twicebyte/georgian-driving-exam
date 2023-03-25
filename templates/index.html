@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#f6f9ff"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo.png') }}">
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}" />
@@ -24,8 +25,11 @@
             <div class="placeholder"></div>
 
             <div class="ticket">
-                <div style="margin: 32px;"><h3>Экзамен начинается</h2></div>
-                <div style="margin: 16px;"><span class="nextexam" onclick="logout(this)">Выйти</span></div>
+                <div style="margin: 32px;"><h2>Экзамен начинается</h2></div>
+                <div style="margin: 16px; display: flex; justify-content: space-around;">
+                    <span class="hidden nextexam" id="butInstall">Установить</span>
+                    <span class="nextexam" onclick="logout(this)">Выйти</span>
+                </div>
             </div>
         {% for i, ticket in tickets %}
             <div class="ticket">

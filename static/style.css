@@ -244,6 +244,10 @@ span.nextexam {
     margin: 8px 0;
 }
 
+.hidden {
+    display: none;
+}
+
 .modal {
     display: block;
     position: fixed;
@@ -333,9 +337,7 @@ span.nextexam {
     }
 
     div.ticket > div.question {
-        padding: 0 32px;
         position: relative;
-        margin-left: 48px;
         padding: 16px;
     }
     div.ticket-container {
