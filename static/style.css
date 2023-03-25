@@ -191,6 +191,7 @@ div.ticket > div.desc:hover span {
 
 div.ticket > div.question {
     padding: 0 32px;
+    position: relative;
 }
 
 div.ticket > span.num {
@@ -203,6 +204,19 @@ div.ticket > span.num {
     transform: translateY(-50%);
     z-index: 1;
     color: #556cf1;
+}
+
+span.mobilenum {
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    -ms-transform: translateY(-50%) translateX(-100%);
+    transform: translateY(-50%) translateX(-50%);
+    font-size: x-large;
+    z-index: 10;
+    color: #556cf1;
+    text-anchor: middle;
+    display: none;
 }
 
 span#goodnum {
@@ -259,3 +273,90 @@ span.nextexam {
     border-radius: 20px;
     box-shadow: 0px 0px 16px -8px #888;
 }
+
+@media (max-width: 500px) {
+    h2 {
+        font-size: 1.0em;
+    }
+
+    div.ticket > img {
+        margin: 8px 0;
+    }
+
+    div.ticket > div.answers > div.answer {
+        font-size: 0.9em;
+    }
+
+    div.ticket > span.num {
+        display: none;
+    }
+
+    span.allnum {
+        display: none;
+    }
+
+    span.mobilenum {
+        font-size: large;
+        display: inline;
+    }
+
+    div.ticket > div.question {
+        padding: 0 32px;
+        position: relative;
+        margin-left: 48px;
+        padding: 16px;
+    }
+
+
+  }
+
+
+  @media (max-width: 1000px) {
+    h2, h3 {
+        font-size: 1.2em;
+    }
+
+    div.ticket {
+        max-width: calc(100vw - 200px);
+        margin-left: 64px;
+    }
+
+    div.ticket > img {
+        margin: 8px 0;
+    }
+    div.ticket > span.num {
+        right: -90px;
+    }
+
+    div.ticket > div.answers > div.answer {
+        font-size: 1.0em;
+    }
+
+    /* div.ticket > span.num {
+        display: none;
+    } */
+
+    /* span.allnum {
+        display: none;
+    } */
+
+    /* span.mobilenum {
+        font-size: large;
+        display: inline;
+    } */
+
+    div.ticket > div.question {
+        padding: 0 32px;
+        position: relative;
+        margin-left: 48px;
+        padding: 16px;
+    }
+    div.ticket-container {
+        align-items: flex-start;
+    }
+
+    .shader {
+        width: 100px;
+    }
+
+  }

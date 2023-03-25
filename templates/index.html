@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <title>Georgian Driving Exam</title>
         <script>
@@ -133,13 +134,13 @@
             <div class="placeholder"></div>
 
             <div class="ticket">
-                <div class="question"><h2>Экзамен начинается</h2></div>
+                <div style="margin: 32px;"><h3>Экзамен начинается</h2></div>
                 <div style="margin: 16px;"><span class="nextexam" onclick="logout(this)">Выйти</span></div>
             </div>
         {% for i, ticket in tickets %}
             <div class="ticket">
                 <span class="num">{{ i+1 }}</span>
-                <div class="question"><h2>{{ ticket.question }}</h2></div>
+                <div class="question"><span class="mobilenum">{{ i+1 }}</span><h2>{{ ticket.question }}</h2></div>
                 {% if ticket.image %}
                 <img src="{{ ticket.image }}" alt="Ticket image">
                 {% endif %}
@@ -156,7 +157,7 @@
             </div>
         {% endfor %}
         <div class="ticket">
-            <div class="question"><h2>Экзамен закончен</h2></div>
+            <div style="margin: 32px;"><h3>Экзамен закончен</h2></div>
             <span class="stats" id="goodnum">0</span><span class="stats"> / {{ allnum }}</span>
             <div style="margin: 16px;"><span class="nextexam" onclick="nextexam(this)">Ещё раз</span></div>
         </div>
