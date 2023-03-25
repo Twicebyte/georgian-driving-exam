@@ -44,7 +44,7 @@ class Ticket:
         }
 
 def get_tickets(force=False):
-    if os.path.exists("tickets.json") and not force:
+    if os.path.exists("resource/tickets.json") and not force:
         tickets = [
             Ticket(
                 id=ticket["id"],
@@ -55,7 +55,7 @@ def get_tickets(force=False):
                 correct_answer=ticket["correct_answer"],
                 lazy_load=True
             )
-            for ticket in json.load(open("tickets.json"))
+            for ticket in json.load(open("resource/tickets.json"))
             if "id" in ticket
         ]
     else:
@@ -84,7 +84,7 @@ def get_tickets(force=False):
             for ticket in response.json()
             if "id" in ticket
         ]
-        json.dump([ticket.dump for ticket in tickets], open("tickets.json", "w"))
+        json.dump([ticket.dump for ticket in tickets], open("resource/tickets.json", "w"))
     return tickets
 
 # @app.after_request

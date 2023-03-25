@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "name": "Georgian Driving Exam",
+    "short_name": "Georgian Driving Exam",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#fff",
+    "description": "Usable app for training for Georgian Driving Exam",
+    "icons": [
+      {
+        "src": "static/logo.png",
+        "sizes": "500x500",
+        "type": "image/png"
+      }
+    ]
+  }
