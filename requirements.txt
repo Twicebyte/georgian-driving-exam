@@ -3,3 +3,4 @@ gunicorn==20.1.0
 googletrans==4.0.0-rc1
 bs4
 requests
+google-api-python-client

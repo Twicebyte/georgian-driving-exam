@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 from flask import Flask, redirect, render_template, request, session
 from googletrans import Translator
 
-# from google.oauth2 import id_token
-# from google.auth.transport import requests
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 
 app = Flask(__name__)
@@ -95,37 +95,36 @@ def get_tickets(force=False):
 
 @app.route("/")
 def index():
-    # if not session.get("user"):
-    #     return render_template('login.html')
+    if not session.get("user"):
+        return render_template('login.html')
     tickets = get_tickets()
     return render_template('index.html', tickets=enumerate(tickets), allnum=len(tickets))
 
-# @app.route("/login", methods=["POST"])
-# def login():
-#     token = request.form.get("idtoken")
-#     try:
-#         CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
-#         idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-#         session['user'] = idinfo['sub']
-#     except ValueError:
-#         # Invalid token
-#         pass
-#     print(request.form)
-#     return redirect("/")
+@app.route("/login", methods=["POST"])
+def login():
+    token = request.form.get("idtoken")
+    try:
+        CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        session['user'] = idinfo['sub']
+    except ValueError:
+        # Invalid token
+        pass
+    print(request.form)
+    return redirect("/")
 
 @app.route("/update")
 def update():
-    # if not session.get("user"):
-    #     return render_template('login.html')
+    if not session.get("user"):
+        return render_template('login.html')
     get_tickets(force=True)
     return redirect("/")
 
 
-# @app.route('/logout')
-# def logout():
-#     # remove the username from the session if it's there
-#     session.pop('user', None)
-#     return redirect("/")
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
