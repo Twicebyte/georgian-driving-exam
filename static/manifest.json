@@ -8,9 +8,10 @@
     "description": "Usable app for training for Georgian Driving Exam",
     "icons": [
       {
-        "src": "static/logo.png",
-        "sizes": "500x500",
-        "type": "image/png"
+        "src": "maskable_icon.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
       }
     ]
   }

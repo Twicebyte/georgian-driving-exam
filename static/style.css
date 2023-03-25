@@ -311,7 +311,7 @@ span.nextexam {
   }
 
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1000px) and (min-width: 500px)  {
     h2, h3 {
         font-size: 1.2em;
     }
