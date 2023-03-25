@@ -1,14 +1,13 @@
 import json
 import os
 
-
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, redirect, render_template, request, session
 from googletrans import Translator
 
-from google.oauth2 import id_token
-from google.auth.transport import requests
+# from google.oauth2 import id_token
+# from google.auth.transport import requests
 
 
 app = Flask(__name__)
