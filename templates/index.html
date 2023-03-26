@@ -24,11 +24,22 @@
             <div class="placeholder"></div>
             <section>
                 <div class="ticket" style="width: 80vw; max-width: 600px;">
-                    <div class="headercontainer"><h2>Меню</h2></div>
-                    <div class="linklist"><img src="{{ session.get('pic') }}"/><span>{{ session.get('user') }}</span></div>
-                    <div class="linklist">
-                        <span class="hidden nextexam" id="butInstall">Установить</span>
-                        <span class="nextexam" onclick="logout(this)">Выйти</span>
+
+                    <div class="linklist" style="
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                    ">
+                        <img class="profilepic" src="{{ session.get('pic') }}" style="margin: 8px; margin-right: 24px; clip-path: circle();">
+                        <div class="linklist" style="margin: 0; flex-direction: column; display: flex; align-items: baseline;">
+                            <h2>Меню</h2>
+                            <span>{{ session.get('user') }}</span>
+                            <div class="linklist" style="margin: 8px;">
+                                <span class="hidden nextexam" id="butInstall">Установить</span>
+                                <span class="nextexam" onclick="logout(this)">Выйти</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

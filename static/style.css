@@ -250,8 +250,9 @@ span.allnum {
     font-size: xx-large;
 }
 
+
 span.nextexam {
-    font-size: x-large;
+    font-size: large;
     cursor: pointer;
     border-bottom: 1px dotted black;
     margin: 8px 0;
@@ -308,6 +309,11 @@ span.nextexam {
 
     .linklist {
         margin: 8px;
+    }
+
+    .profilepic {
+        width: 64px;
+        margin-right: 16px;
     }
 
     h1 {
