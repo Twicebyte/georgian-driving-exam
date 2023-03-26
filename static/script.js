@@ -59,7 +59,7 @@ function keyhandler(event) {
             var top = el.getBoundingClientRect().top;
             var bottom = el.getBoundingClientRect().bottom;
             // if an element is more or less in the middle of the viewport
-            if( bottom > viewportHeight/2 && top < viewportHeight/2 ){
+            if( bottom > 100 && top < 100 ){
                 middleElement = el;
                 break;
             }
@@ -79,7 +79,7 @@ function keyhandler(event) {
             var top = el.getBoundingClientRect().top;
             var bottom = el.getBoundingClientRect().bottom;
             // if an element is more or less in the middle of the viewport
-            if( bottom > viewportHeight/2 && top < viewportHeight/2 ){
+            if( bottom > 100 && top < 100 ){
                 middleElement = el;
                 break;
             }
@@ -99,7 +99,7 @@ function keyhandler(event) {
             var top = el.getBoundingClientRect().top;
             var bottom = el.getBoundingClientRect().bottom;
             // if an element is more or less in the middle of the viewport
-            if( bottom > viewportHeight/2 && top < viewportHeight/2 ){
+            if( bottom > 100 && top < 100 ){
                 middleElement = el;
                 break;
             }
