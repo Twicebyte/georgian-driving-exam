@@ -9,6 +9,7 @@
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}" />
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0" />
         <title>Georgian Driving Exam</title>
     </head>
     <body>
@@ -44,8 +45,16 @@
             <section id="stack">
                 <div class="snap">
                     <div class="ticket">
-                        <div class="linklist">
-                            <span class="nextexam" onclick="recreate()">Начать экзамен</span>
+                        <div class="linklist" style="align-items: center;">
+                            <span class="material-symbols-rounded" style="
+                                margin: 8px;
+                                font-size: xxx-large;
+                                color: #2cbd2c;
+                                text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+                            ">play_arrow</span>
+                            <span class="nextexam" onclick="recreate()">
+                                Начать экзамен
+                            </span>
                         </div>
                     </div>
                 </div>

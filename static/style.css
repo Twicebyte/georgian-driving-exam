@@ -256,7 +256,7 @@ span.nextexam {
     font-size: large;
     cursor: pointer;
     border-bottom: 1px dotted black;
-    margin: 8px 0;
+    margin: 8px;
 }
 
 .hidden {

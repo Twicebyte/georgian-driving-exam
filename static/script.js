@@ -199,7 +199,9 @@ function recreate() {
                 <div class="ticket">
                     <div style="margin: 32px;"><h3>Экзамен закончен</h2></div>
                     <span class="stats" id="goodnum">0</span><span class="stats"> / ${allnum}</span>
-                    <div style="margin: 16px;"><span class="nextexam" onclick="recreate()">Ещё раз</span></div>
+                    <div style="margin: 16px;">
+                        <span class="nextexam" onclick="recreate()">Ещё раз</span>
+                    </div>
                 </div>
             `;
             stack.appendChild(element);
