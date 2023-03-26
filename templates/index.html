@@ -16,37 +16,37 @@
         <div class="header" id="header">
             <h1>Georgian Driving Exam</h1>
         </div>
-        <div class="shader">
-            <span class="allnum" id="allnum"></span>
-        </div>
-
         <div class="ticket-container">
             <div class="placeholder"></div>
             <section>
-                <div class="ticket" style="width: 80vw; max-width: 600px;">
+                <div class="snap">
+                    <div class="ticket" style="width: 80vw; max-width: 600px;">
 
-                    <div class="linklist" style="
-                        display: flex;
-                        flex-direction: row;
-                        align-items: center;
-                        justify-content: center;
-                    ">
-                        <img class="profilepic" src="{{ session.get('pic') }}" style="margin: 8px; margin-right: 24px; clip-path: circle();">
-                        <div class="linklist" style="margin: 0; flex-direction: column; display: flex; align-items: baseline;">
-                            <h2>Меню</h2>
-                            <span>{{ session.get('user') }}</span>
-                            <div class="linklist" style="margin: 8px;">
-                                <span class="hidden nextexam" id="butInstall">Установить</span>
-                                <span class="nextexam" onclick="logout(this)">Выйти</span>
+                        <div class="linklist" style="
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+                        ">
+                            <img class="profilepic" src="{{ session.get('pic') }}" style="margin: 8px; margin-right: 24px; clip-path: circle();">
+                            <div class="linklist" style="margin: 0; flex-direction: column; display: flex; align-items: baseline;">
+                                <h2>Меню</h2>
+                                <span>{{ session.get('user') }}</span>
+                                <div class="linklist" style="margin: 8px;">
+                                    <span class="hidden nextexam" id="butInstall">Установить</span>
+                                    <span class="nextexam" onclick="logout(this)">Выйти</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
             <section id="stack">
-                <div class="ticket">
-                    <div class="linklist">
-                        <span class="nextexam" onclick="recreate()">Начать экзамен</span>
+                <div class="snap">
+                    <div class="ticket">
+                        <div class="linklist">
+                            <span class="nextexam" onclick="recreate()">Начать экзамен</span>
+                        </div>
                     </div>
                 </div>
             </section>

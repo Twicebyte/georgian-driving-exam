@@ -74,8 +74,13 @@ div.ticket-container::-webkit-scrollbar {
 }
 
 div.placeholder {
-    min-height: 50vh;
+    min-height: 100vh;
     max-width: 800px;
+}
+
+div.snap {
+    scroll-snap-align: start;
+    padding: 8px;
 }
 
 div.ticket {
@@ -85,7 +90,6 @@ div.ticket {
     padding: 16px 0px;
     border-radius: 20px;
     box-shadow: 0px 0px 16px -8px #888;
-    scroll-snap-align: center;
     background-color: #fff;
     z-index: 3;
 }
@@ -147,9 +151,10 @@ div.ticket > div.answers > div.answer:hover {
     box-shadow: 2px 2px 12px -4px #888;
 }
 
-/* div.ticket.done > div.answers > div.answer {
+div.ticket.done > div.answers > div.answer {
     background-color: #fff;
-} */
+    box-shadow: none;
+}
 
 div.ticket.done > div.answers > div.correct {
     background-color: #f2fff2;
@@ -211,11 +216,17 @@ div.ticket > span.num {
     margin: 0;
     top: 50%;
     right: -96px;
-    font-size: xx-large;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+    font-size: xxx-large;
+    -ms-transform: translateY(-50%) translateX(50%);;
+    transform: translateY(-50%) translateX(50%);;
     z-index: 1;
-    color: #556cf1;
+    background-color: #c1c1c1;
+    color: transparent;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    font-weight: 700;
 }
 
 span.mobilenum {
@@ -234,16 +245,6 @@ span.mobilenum {
 
 span#goodnum {
     color: #2cbd2c;
-}
-
-span.allnum {
-    position: fixed;
-    left: calc(50% + 516px);
-    margin: 0;
-    top: calc(36px + 50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    font-size: xx-large;
 }
 
 .stats {

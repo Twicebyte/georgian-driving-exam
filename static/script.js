@@ -175,24 +175,26 @@ function recreate() {
             for (var i = 0; i < data.length; i++) {
                 var ticket = data[i];
                 var element = document.createElement('div');
-                element.classList.add('ticket');
+                element.classList.add('snap');
                 element.innerHTML = `
-                    <span class="num">${i+1}</span>
-                    <div class="question"><span class="mobilenum">${i+1}</span><h2>${ticket.question}</h2></div>
-                    ${ticket.image ? `<img src="${ticket.image}" alt="Ticket image">` : ''}
-                    <div class="answers">
-                        ${Object.entries(ticket.answers).map(([n, answer]) => `<div onclick="answerclick(this)" class="answer ${answer.real_id == ticket.correct ? 'correct' : ''}">
-                            <span class="answernum">${n}</span>
-                            ${answer.text}
-                        </div>`).join('')}
+                    <div class="ticket">
+                        <span class="num">${i+1}</span>
+                        <div class="question"><span class="mobilenum">${i+1}</span><h2>${ticket.question}</h2></div>
+                        ${ticket.image ? `<img src="${ticket.image}" alt="Ticket image">` : ''}
+                        <div class="answers">
+                            ${Object.entries(ticket.answers).map(([n, answer]) => `<div onclick="answerclick(this)" class="answer ${answer.real_id == ticket.correct_answer ? 'correct' : ''}">
+                                <span class="answernum">${n}</span>
+                                ${answer.text}
+                            </div>`).join('')}
+                        </div>
+                        <div class="desc">Детали<span class="descinfo">${ticket.desc}</span></div>
+                        <div class="next" onclick="scrollnext(this)">Далее</div>
                     </div>
-                    <div class="desc">Детали<span class="descinfo">${ticket.desc}</span></div>
-                    <div class="next" onclick="scrollnext(this)">Далее</div>
                 `;
                 stack.appendChild(element);
             };
             var element = document.createElement('div');
-            element.classList.add('ticket');
+            element.classList.add('snap');
             element.innerHTML = `
                 <div class="ticket">
                     <div style="margin: 32px;"><h3>Экзамен закончен</h2></div>
@@ -201,7 +203,6 @@ function recreate() {
                 </div>
             `;
             stack.appendChild(element);
-            document.getElementById('allnum').innerHTML = ` / ${allnum}`;
 
             //Translate all descriptions from georgian to russian
             elements = document.getElementsByClassName('descinfo');
