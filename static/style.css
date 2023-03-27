@@ -180,7 +180,7 @@ div.ticket > div.desc {
     margin: 8px 0;
 }
 
-div.ticket > div.desc span {
+div.ticket > div.desc span.descinfo {
     visibility: hidden;
     min-width: 700px;
     bottom: 200%;
@@ -201,8 +201,12 @@ div.ticket > div.desc span {
     user-select: none;
 }
 
-div.ticket > div.desc:hover span {
+div.ticket > div.desc:hover span.descinfo {
     visibility: visible;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 div.ticket > div.question {
@@ -256,7 +260,7 @@ span.nextexam {
     font-size: large;
     cursor: pointer;
     border-bottom: 1px dotted black;
-    margin: 8px;
+    margin: 8px 0;
 }
 
 .hidden {

@@ -147,6 +147,25 @@ if ("serviceWorker" in navigator) {
 
 const stack = document.getElementById('stack');
 
+function translate_desc(element) {
+    let descinfo = element.querySelector('.descinfo');
+    let descraw = element.querySelector('.descraw');
+    if (descinfo.dataset.translated == 'true') {
+        return
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/translate');
+    //Set payload to element text
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange  = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            descinfo.innerHTML = JSON.parse(this.responseText).text;
+            descinfo.dataset.translated = 'true';
+        }
+    };
+    xhr.send(JSON.stringify({text: descraw.innerHTML}));
+}
+
 function recreate() {
     stack.innerHTML = '';
 
@@ -187,7 +206,17 @@ function recreate() {
                                 ${answer.text}
                             </div>`).join('')}
                         </div>
-                        <div class="desc">Детали<span class="descinfo">${ticket.desc}</span></div>
+                        <div class="desc">
+                            Детали
+                            <span class="hidden descraw">${ticket.desc}</span>
+                            <span class="descinfo">
+                                <span class="material-symbols-rounded" style="
+                                    margin: 8px;
+                                    font-size: x-large;
+                                ">downloading</span>
+                                Получение описания
+                            </span>
+                        </div>
                         <div class="next" onclick="scrollnext(this)">Далее</div>
                     </div>
                 `;
@@ -207,18 +236,9 @@ function recreate() {
             stack.appendChild(element);
 
             //Translate all descriptions from georgian to russian
-            elements = document.getElementsByClassName('descinfo');
+            elements = document.getElementsByClassName('desc');
             for (let element of elements) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/translate');
-                //Set payload to element text
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.onreadystatechange  = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        element.innerHTML = JSON.parse(this.responseText).text;
-                    }
-                };
-                xhr.send(JSON.stringify({text: element.innerHTML}));
+                element.addEventListener('mouseenter', () => translate_desc(element));
             }
         }
     };
