@@ -4,12 +4,11 @@ import os
 
 import requests as req
 from bs4 import BeautifulSoup
-from flask import Flask, g, jsonify, redirect, render_template, request, session
-from googletrans import Translator
-
-from google.oauth2 import id_token
+from flask import (Flask, jsonify, redirect, render_template, request,
+                   send_from_directory, session)
 from google.auth.transport import requests
-
+from google.oauth2 import id_token
+from googletrans import Translator
 
 app = Flask(__name__)
 app.secret_key = b'445c1e98c90420acbf41320ff5f89674f75f18d345fd25fc267bb03afb40c136'
@@ -79,6 +78,10 @@ def login_required(view):
 def index():
     return render_template('index.html')
 
+
+@app.route('/.well-known/<path:path>')
+def send_report(path):
+    return send_from_directory('.well-known', path)
 
 @app.route("/login", methods=["POST"])
 def login():

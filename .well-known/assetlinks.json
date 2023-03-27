@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "app.ondigitalocean.georgian_driving_exam_7jwb8.twa",
+                     "sha256_cert_fingerprints": ["E3:E0:2B:8F:77:31:EA:55:AB:98:15:E6:5B:3D:5A:A7:43:55:59:BB:98:5B:FD:B0:5B:4B:8C:08:D8:C0:56:F1"] }
+      }
+]
