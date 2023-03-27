@@ -76,7 +76,7 @@ def login_required(view):
 @app.route("/")
 @login_required
 def index():
-    return render_template('index.html')
+    return render_template('index.html', str=str, int=int)
 
 @app.route("/privacy")
 def privacy():
@@ -86,6 +86,15 @@ def privacy():
 @app.route('/.well-known/<path:path>')
 def send_report(path):
     return send_from_directory('.well-known', path)
+
+@app.route("/stats", methods=["POST"])
+@login_required
+def stats():
+    session['stats-exams'] = request.json['exams']
+    session['stats-questions'] = request.json['questions']
+    session['stats-correct'] = request.json['correct']
+    return jsonify({})
+
 
 @app.route("/login", methods=["POST"])
 def login():

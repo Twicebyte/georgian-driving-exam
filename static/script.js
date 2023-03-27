@@ -3,33 +3,13 @@ var done = 0;
 var correct = 0;
 var allnum = 0;
 
-function nextexam(element) {
-    // Show modal with loader
-    var modal = document.createElement('div');
-    modal.classList.add('modal');
-    var loader = document.createElement('div');
-    loader.classList.add('loader');
-    modal.appendChild(loader);
-    //animate loader
-    var i = 0;
-    var interval = setInterval(function() {
-        loader.style.transform = 'rotate(' + i + 'deg)';
-        i += 10;
-        if (i == 360) { i = 0; }
-    }, 50);
-    document.body.appendChild(modal);
-
-    window.location.href = '/update';
-
-};
-
 function logout(element) {
     window.location.href = '/logout';
 
 };
 
 function scrollnext(element) {
-    element.parentElement.nextElementSibling.scrollIntoView(
+    element.parentElement.parentElement.nextElementSibling.scrollIntoView(
         {behavior: "smooth", block: "center", inline: "center"}
     )
 };
@@ -40,9 +20,14 @@ function answerclick(element) {
         done += 1;
         if (!element.classList.contains('correct')) {
             element.classList.add('incorrect');
+            add_incorrect();
         } else {
             correct += 1;
+            add_correct();
             document.getElementById('goodnum').innerHTML = correct;
+        }
+        if (done == allnum) {
+            add_exam();
         }
         document.getElementById('header').style.backgroundImage = 'linear-gradient(to right, #f2fff2 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (done / allnum * 100) + '%, #ffffff ' + (done / allnum * 100) + '%, #ffffff 100%)';
     }
@@ -55,7 +40,7 @@ function keyhandler(event) {
         var middleElement;
         var viewportHeight = document.defaultView.innerHeight;
 
-        for (var el of document.querySelectorAll('.ticket')) {
+        for (var el of document.querySelectorAll('.snap')) {
             var top = el.getBoundingClientRect().top;
             var bottom = el.getBoundingClientRect().bottom;
             // if an element is more or less in the middle of the viewport

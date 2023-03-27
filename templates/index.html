@@ -13,6 +13,41 @@
         <title>Georgian Driving Exam</title>
     </head>
     <body>
+        <script>
+            var stats_exams = {{ session.get('stats-exams', 0) }};
+            var stats_questions = {{ session.get('stats-questions', 0) }};
+            var stats_correct = {{ session.get('stats-correct', 0) }};
+
+            function add_exam() {
+                stats_exams += 1;
+                send_stats();
+            }
+
+            function add_incorrect() {
+                stats_questions += 1;
+                send_stats();
+            }
+
+            function add_correct() {
+                stats_questions += 1;
+                stats_correct += 1;
+                send_stats();
+            }
+
+            function send_stats() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/stats", true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify({
+                    "exams": stats_exams,
+                    "questions": stats_questions,
+                    "correct": stats_correct
+                }));
+                document.getElementById("stats-exams").innerHTML = stats_exams;
+                document.getElementById("stats-questions").innerHTML = stats_questions;
+                document.getElementById("stats-correct").innerHTML = Math.round(100 * stats_correct / stats_questions) + " %";
+            }
+        </script>
         <script src="{{ url_for('static', filename='script.js') }}" defer></script>
         <div class="header" id="header">
             <h1>Georgian Driving Exam</h1>
@@ -38,6 +73,15 @@
                                     <span class="nextexam" onclick="logout(this)">Выйти</span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="linklist" style="margin: 8px;">
+                            <span class="stat key">Пройдено наборов</span><span class="stat" id="stats-exams">{{ session.get('stats-exams', 0) }}</span>
+                        </div>
+                        <div class="linklist" style="margin: 8px;">
+                            <span class="stat key">Пройдено вопросов</span><span class="stat" id="stats-questions">{{ session.get('stats-questions', 0) }}</span>
+                        </div>
+                        <div class="linklist" style="margin: 8px;">
+                            <span class="stat key">Точность</span><span class="stat" id="stats-correct">{{ str(int(100 * session.get('stats-correct', 0) / session.get('stats-questions', 0))) + " %" if session.get('stats-questions', 0) else 'N/A' }}</span>
                         </div>
                     </div>
                 </div>
