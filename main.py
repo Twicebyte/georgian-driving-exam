@@ -78,6 +78,10 @@ def login_required(view):
 def index():
     return render_template('index.html')
 
+@app.route("/privacy")
+def privacy():
+    return render_template('privacy.html')
+
 
 @app.route('/.well-known/<path:path>')
 def send_report(path):
