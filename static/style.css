@@ -306,7 +306,7 @@ span.nextexam {
     justify-content: space-around;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 700px) {
 
     .headercontainer {
         margin: 8px;
@@ -333,7 +333,7 @@ span.nextexam {
         padding: 8px;
     }
 
-    div.ticket > div.desc span {
+    div.ticket > div.desc span.descinfo {
         min-width: 90vw;
         margin-left: -45vw;
         font-size: 0.9em;
@@ -372,7 +372,7 @@ span.nextexam {
   }
 
 
-  @media (max-width: 1000px) and (min-width: 500px)  {
+  @media (max-width: 1000px) and (min-width: 700px)  {
     h2, h3 {
         font-size: 1.2em;
     }
@@ -386,7 +386,7 @@ span.nextexam {
         margin: 8px 0;
     }
     div.ticket > span.num {
-        right: -90px;
+        right: -70px;
     }
 
     div.ticket > div.answers > div.answer {
@@ -399,6 +399,12 @@ span.nextexam {
     }
     div.ticket-container {
         align-items: flex-start;
+    }
+
+    div.ticket > div.desc span.descinfo {
+        min-width: 70vw;
+        margin-left: -35vw;
+        font-size: 1em;
     }
 
     .shader {
