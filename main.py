@@ -16,7 +16,7 @@ app.secret_key = b'445c1e98c90420acbf41320ff5f89674f75f18d345fd25fc267bb03afb40c
 translator = Translator(['translate.google.com'])
 
 class Ticket:
-    def __init__(self, id, image, question, answers, desc, correct_answer):
+    def __init__(self, id, image, question, answers, desc, correct_answer, **kwargs):
         self.id = id
         self.image = image
         self.question = question
@@ -24,6 +24,7 @@ class Ticket:
         text = BeautifulSoup(desc, 'html.parser').find_all('p')[1].text
         self.description = text
         self.correct = correct_answer
+        self.options = kwargs
 
     @property
     def dump(self):
@@ -34,6 +35,7 @@ class Ticket:
             "answers": self.answers,
             "desc": self.description,
             "correct_answer": self.correct,
+            "options": self.options,
         }
 
 def get_tickets():
@@ -57,7 +59,10 @@ def get_tickets():
             question=ticket["question"],
             answers=ticket["answers"],
             desc=ticket["desc"],
-            correct_answer=ticket["correct_answer"]
+            correct_answer=ticket["correct_answer"],
+            cutoff=ticket["cutoff"],
+            topic=ticket["topic"],
+            coefficient=ticket["coeficient"],
         )
         for ticket in response.json()
         if "id" in ticket

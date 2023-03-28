@@ -99,15 +99,21 @@ div.ticket > h2 {
     user-select: none;
 }
 
-div.ticket > img {
+div.ticket > div.imgcontainer > img {
+    position: relative;
     width: 100%;
-    margin: 32px 0;
+    margin: 0;
     height: auto;
-    box-shadow: 0px 4px 8px -4px #888;
-    transform: scale(1.05);
-    border-radius: 8px;
-    border: #fff 2px;
+    scale: 1.02;
     z-index: 10;
+}
+
+div.ticket > div.imgcontainer > img.cutoff1 {
+    margin-bottom: -17%;
+}
+
+div.ticket > div.imgcontainer > img.cutoff2 {
+    margin-bottom: -40.5%;
 }
 
 div.ticket > div.answers {
@@ -295,6 +301,14 @@ span.nextexam {
     border-radius: 20px;
     box-shadow: 0px 0px 16px -8px #888;
 }
+.imgcontainer {
+    box-shadow: 0px 4px 8px -4px #888;
+    transform: scale(1.05);
+    border-radius: 8px;
+    border: #fff 2px;
+    overflow: hidden;
+    margin: 32px 0;
+}
 
 .headercontainer {
     margin: 32px;
@@ -307,7 +321,13 @@ span.nextexam {
 }
 
 span.stat {
-    width: 50%;
+    width: 40%;
+    text-align: left;
+    padding: 0 8px;
+}
+span.stat.key {
+    width: 60%;
+    text-align: right;
 }
 
 @media (max-width: 700px) {
@@ -343,7 +363,7 @@ span.stat {
         font-size: 0.9em;
     }
 
-    div.ticket > img {
+    div.ticket > div.imgcontainer {
         margin: 8px 0;
     }
 
@@ -386,7 +406,7 @@ span.stat {
         margin-left: 64px;
     }
 
-    div.ticket > img {
+    div.ticket > div.imgcontainer {
         margin: 8px 0;
     }
     div.ticket > span.num {

@@ -184,7 +184,7 @@ function recreate() {
                     <div class="ticket">
                         <span class="num">${i+1}</span>
                         <div class="question"><span class="mobilenum">${i+1}</span><h2>${ticket.question}</h2></div>
-                        ${ticket.image ? `<img src="${ticket.image}" alt="Ticket image">` : ''}
+                        ${ticket.image ? `<div class="imgcontainer"><img class="cutoff${ticket.options.cutoff}" src="${ticket.image}" alt="Ticket image"></div>` : ''}
                         <div class="answers">
                             ${Object.entries(ticket.answers).map(([n, answer]) => `<div onclick="answerclick(this)" class="answer ${answer.real_id == ticket.correct_answer ? 'correct' : ''}">
                                 <span class="answernum">${n}</span>
