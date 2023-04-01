@@ -161,9 +161,9 @@ def login():
             )
             res = cursor.fetchone()
             if res:
-                session['stats-exams'] = res['exams']
-                session['stats-questions'] = res['questions']
-                session['stats-correct'] = res['correct']
+                session['stats-exams'] = res[1]
+                session['stats-questions'] = res[2]
+                session['stats-correct'] = res[3]
             else:
                 session['stats-exams'] = 0
                 session['stats-questions'] = 0
