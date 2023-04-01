@@ -2,6 +2,7 @@ import functools
 import json
 import os
 
+import psycopg2
 import requests as req
 from bs4 import BeautifulSoup
 from flask import (Flask, jsonify, redirect, render_template, request,
@@ -14,6 +15,7 @@ app = Flask(__name__)
 app.secret_key = b'445c1e98c90420acbf41320ff5f89674f75f18d345fd25fc267bb03afb40c136'
 
 translator = Translator(['translate.google.com'])
+postgres = psycopg2.connect(os.environ.get("DATABASE_URL"))
 
 class Ticket:
     def __init__(self, id, image, question, answers, desc, correct_answer, **kwargs):
@@ -81,6 +83,34 @@ def login_required(view):
 @app.route("/")
 @login_required
 def index():
+    with postgres.cursor() as cursor:
+        cursor.execute(
+            f"""
+            SELECT * FROM public.stats
+            WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
+            """
+        )
+        res = cursor.fetchone()
+        if res:
+            session['stats-exams'] = res[1]
+            session['stats-questions'] = res[2]
+            session['stats-correct'] = res[3]
+        else:
+            session['stats-exams'] = 0
+            session['stats-questions'] = 0
+            session['stats-correct'] = 0
+            cursor.execute(
+                f"""
+                INSERT INTO public.stats (email, exams, questions, correct)
+                VALUES (
+                    '{session.get('user', 'twicebyte@gmail.com')}',
+                    {session.get('stats-exams', 0)},
+                    {session.get('stats-questions', 0)},
+                    {session.get('stats-correct', 0)}
+                )
+                """
+            )
+            postgres.commit()
     return render_template('index.html', str=str, int=int)
 
 @app.route("/privacy")
@@ -98,6 +128,18 @@ def stats():
     session['stats-exams'] = request.json['exams']
     session['stats-questions'] = request.json['questions']
     session['stats-correct'] = request.json['correct']
+
+    with postgres.cursor() as cursor:
+        cursor.execute(
+            f"""
+            UPDATE public.stats
+            SET exams={session.get('stats-exams', 0)},
+                questions={session.get('stats-questions', 0)},
+                correct={session.get('stats-correct', 0)}
+            WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
+            """
+        )
+        postgres.commit()
     return jsonify({})
 
 
@@ -110,6 +152,34 @@ def login():
         print(idinfo)
         session['user'] = idinfo['email']
         session['pic'] = idinfo['picture']
+        with postgres.cursor() as cursor:
+            cursor.execute(
+                f"""
+                SELECT * FROM public.stats
+                WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
+                """
+            )
+            res = cursor.fetchone()
+            if res:
+                session['stats-exams'] = res['exams']
+                session['stats-questions'] = res['questions']
+                session['stats-correct'] = res['correct']
+            else:
+                session['stats-exams'] = 0
+                session['stats-questions'] = 0
+                session['stats-correct'] = 0
+                cursor.execute(
+                    f"""
+                    INSERT INTO public.stats (email, exams, questions, correct)
+                    VALUES (
+                        '{session.get('user', 'twicebyte@gmail.com')}',
+                        {session.get('stats-exams', 0)},
+                        {session.get('stats-questions', 0)},
+                        {session.get('stats-correct', 0)}
+                    )
+                    """
+                )
+                postgres.commit()
     except ValueError:
         print('login failed')
         pass
@@ -135,6 +205,35 @@ def translate():
 def logout():
     session.pop('user', None)
     return redirect("/")
+
+@app.before_first_request
+def prepare_db():
+
+    with postgres.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT EXISTS (
+                SELECT FROM
+                    pg_tables
+                WHERE
+                    schemaname = 'public' AND
+                    tablename  = 'stats'
+            )
+            """
+        )
+        res = cursor.fetchone()
+        if not res[0]:
+            cursor.execute(
+                """
+                CREATE TABLE public.stats (
+                    email VARCHAR(255) PRIMARY KEY,
+                    exams INT,
+                    questions INT,
+                    correct INT
+                )
+                """
+            )
+            postgres.commit()
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
