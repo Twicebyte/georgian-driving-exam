@@ -211,6 +211,20 @@ def logout():
     session.pop('user', None)
     return redirect("/")
 
+@app.route('/reset')
+def reset():
+    with psycopg2.connect(os.environ.get("DATABASE_URL")) as postgres:
+        with postgres.cursor() as cursor:
+            cursor.execute(
+                f"""
+                DELETE FROM public.stats
+                WHERE email='{session.get('user')}'
+                """
+            )
+            postgres.commit()
+    session.pop('user', None)
+    return redirect("/")
+
 @app.before_first_request
 def prepare_db():
     with psycopg2.connect(os.environ.get("DATABASE_URL")) as postgres:

@@ -354,7 +354,7 @@ span.nextexam {
     font-size: large;
     cursor: pointer;
     border-bottom: 1px dotted black;
-    margin: 8px 0;
+    margin: 8px;
 }
 
 .hidden {
@@ -410,13 +410,13 @@ span.nextexam {
 }
 
 span.stat {
-    width: 40%;
+    width: 50%;
     text-align: left;
     padding: 0 8px;
 }
 
 span.stat.key {
-    width: 60%;
+    width: 50%;
     text-align: right;
 }
 

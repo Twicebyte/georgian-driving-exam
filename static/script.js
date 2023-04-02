@@ -1,7 +1,7 @@
 
 var done = 0;
 var correct = 0;
-var allnum = 0;
+var allnum = 30;
 
 
 var stats_exams_started = 0;
@@ -16,7 +16,7 @@ function add_started() {
 };
 
 function add_exam() {
-    stats_exams += 1;
+    stats_exams_completed += 1;
     if (correct == allnum)
         stats_exams_perfect += 1;
     send_stats();
@@ -79,8 +79,13 @@ function get_stats() {
     xhr.send();
 }
 
-function logout(element) {
+function logout() {
     window.location.href = '/logout';
+
+};
+
+function reset() {
+    window.location.href = '/reset';
 
 };
 
@@ -138,7 +143,7 @@ function keyhandler(event) {
             }
         };
         middleElement.nextElementSibling.scrollIntoView(
-            {behavior: "smooth", block: "center", inline: "center"}
+            {behavior: "smooth", block: "start", inline: "center"}
         );
     }
 
@@ -245,7 +250,7 @@ function recreate() {
 
     done = 0;
     correct = 0;
-    allnum = 0;
+    allnum = 30;
 
     var modal = document.createElement('div');
     modal.classList.add('ticket');
@@ -268,7 +273,7 @@ function recreate() {
             clearInterval(interval);
             stack.removeChild(modal);
             var data = JSON.parse(this.responseText);
-            allnum = data.length;
+
             add_started();
             document.getElementById('scroll_float').classList.remove('hidden');
             document.getElementById('header').style.backgroundImage = 'linear-gradient(to right, #f2fff2 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (done / allnum * 100) + '%, #ffffff ' + (done / allnum * 100) + '%, #ffffff 100%)';
