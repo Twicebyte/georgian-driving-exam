@@ -40,6 +40,7 @@ function update_stats() {
     document.getElementById("stats-questions").innerHTML = stats_questions;
     document.getElementById("stats-correct").innerHTML = Math.round(100 * stats_correct / stats_questions) + " %";
 
+    checkachivements();
 };
 
 
@@ -336,7 +337,41 @@ function home() {
     );
 }
 
+function checkachivements() {
+    if (stats_exams_completed > 0) {
+        document.getElementById('rocket_launch').classList.remove('disabled');
+    }
+
+    if (stats_exams_perfect > 0) {
+        document.getElementById('diamond').classList.remove('disabled');
+    }
+
+    if (stats_questions >= 100) {
+        document.getElementById('weight').classList.remove('disabled');
+
+        if (stats_correct / stats_questions > 0.9) {
+            document.getElementById('lightbulb').classList.remove('disabled');
+        }
+    }
+
+    if (stats_exams_perfect >= 20) {
+        document.getElementById('diamond').classList.remove('disabled');
+    }
+
+    if (stats_questions >= 1000) {
+        document.getElementById('all_inclusive').classList.remove('disabled');
+    }
+
+    if (stats_exams_started >= 10) {
+        if (stats_exams_completed / stats_exams_started > 0.9) {
+            document.getElementById('data_check').classList.remove('disabled');
+        }
+    }
+
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     home();
+    document.getElementById('achivements_shelf').classList.remove('hidden');
     get_stats();
 });

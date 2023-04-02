@@ -189,14 +189,92 @@ div.ticket > div.next {
     margin: 8px 0;
 }
 
-div.ticket > div.desc {
+.shelf {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-around;
+    justify-content: space-evenly;
+    align-items: stretch;
+}
+
+div.icon span {
+    font-size: xxx-large;
+}
+
+div.achivement .icon {
+    padding: 24px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px -4px #333;
+    width: fit-content;
+    color: gold;
+}
+
+div.achivement {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: stretch;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    margin: 8px;
+    padding: 8px 0 ;
+    box-sizing: border-box;
+    position: relative;
+}
+
+div.achivement div.name {
+    margin: 16px 0;
+    font-size: large;
+}
+
+div.achivement span.rule {
+    font-size: smaller;
+}
+
+div.achivement.disabled .icon {
+    filter: blur(2px);
+    color: #c1c1c1;
+}
+
+div.achivement span.rule {
+    visibility: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffffbb;
+    color: #000000;
+    text-align: center;
+    border-radius: 6px;
+    padding: 16px;
+    position: absolute;
+    z-index: 2;
+    font-size: smaller;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-shadow: 0 0 8px -4px #333;
+    user-select: none;
+    height: 100%;
+}
+
+div.achivement:hover span.rule {
+    visibility: visible;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+div.desc {
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
     margin: 8px 0;
 }
 
-div.ticket > div.desc span.descinfo {
+div.desc span.descinfo {
     visibility: hidden;
     min-width: 700px;
     bottom: 200%;
@@ -217,7 +295,7 @@ div.ticket > div.desc span.descinfo {
     user-select: none;
 }
 
-div.ticket > div.desc:hover span.descinfo {
+div.desc:hover span.descinfo {
     visibility: visible;
     display: flex;
     flex-direction: row;
@@ -311,6 +389,7 @@ span.nextexam {
     border-radius: 20px;
     box-shadow: 0px 0px 16px -8px #888;
 }
+
 .imgcontainer {
     box-shadow: 0px 4px 8px -4px #888;
     transform: scale(1.05);
@@ -335,12 +414,38 @@ span.stat {
     text-align: left;
     padding: 0 8px;
 }
+
 span.stat.key {
     width: 60%;
     text-align: right;
 }
 
 @media (max-width: 700px) {
+
+    div.achivement {
+        width: 115px;
+    }
+
+    div.achivement div.name {
+        margin: 16px 0;
+        font-size: medium;
+    }
+
+    div.achivement span.rule {
+        font-size: small;
+    }
+
+    div.icon span {
+        font-size: xx-large;
+    }
+
+    div.achivement .icon {
+        padding: 12px;
+        border-radius: 50%;
+        box-shadow: 0 0 8px -4px #333;
+        width: fit-content;
+        color: gold;
+    }
 
     div.floating {
         right: -8px;
@@ -416,10 +521,10 @@ span.stat.key {
         font-size: medium;
     }
 
-  }
+}
 
 
-  @media (max-width: 1000px) and (min-width: 700px)  {
+@media (max-width: 1000px) and (min-width: 700px)  {
 
     div.floating {
         right: -8px;
@@ -471,4 +576,4 @@ span.stat.key {
         width: 100px;
     }
 
-  }
+}
