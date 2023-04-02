@@ -13,67 +13,28 @@
         <title>Georgian Driving Exam</title>
     </head>
     <body>
-        <script>
-
-            function add_started() {
-                stats_exams_started += 1;
-                send_stats();
-            };
-
-            function add_exam() {
-                stats_exams += 1;
-                if (correct == allnum)
-                    stats_exams_perfect += 1;
-                send_stats();
-            };
-
-            function add_incorrect() {
-                stats_questions += 1;
-                send_stats();
-            };
-
-            function add_correct() {
-                stats_questions += 1;
-                stats_correct += 1;
-                send_stats();
-            };
-
-            function update_stats() {
-                document.getElementById("stats-started").innerHTML = stats_exams_started;
-                document.getElementById("stats-completed").innerHTML = stats_exams_completed + " (" + Math.round(100 * stats_exams_completed / stats_exams_started) + " %)";
-                document.getElementById("stats-perfect").innerHTML = stats_exams_perfect + " (" + Math.round(100 * stats_exams_perfect / stats_exams_completed) + " %)";
-                document.getElementById("stats-questions").innerHTML = stats_questions;
-                document.getElementById("stats-correct").innerHTML = Math.round(100 * stats_correct / stats_questions) + " %";
-
-            };
-
-            function send_stats() {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/stats", true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.send(JSON.stringify({
-                    "started": stats_exams_started,
-                    "completed": stats_exams_completed,
-                    "perfect": stats_exams_perfect,
-                    "questions": stats_questions,
-                    "correct": stats_correct
-                }));
-            };
-        </script>
         <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-        <data class="hidden" id="stats_exams_started">{{ session.get('stats-started', 0) }}</data>
-        <data class="hidden" id="stats_exams_completed">{{ session.get('stats-completed', 0) }}</data>
-        <data class="hidden" id="stats_exams_perfect">{{ session.get('stats-perfect', 0) }}</data>
-        <data class="hidden" id="stats_questions">{{ session.get('stats-questions', 0) }}</data>
-        <data class="hidden" id="stats_correct">{{ session.get('stats-correct', 0) }}</data>
         <div class="header" id="header">
-            <h1>Georgian Driving Exam</h1>
+            <h1 onclick="home()">Georgian Driving Exam</h1>
         </div>
         <div class="ticket-container">
+            <div class="floating hidden" id="scroll_float" onclick="scroll_to_active()">
+                <span class="material-symbols-rounded" style="
+                    margin: 8px;
+                    font-size: xxx-large;
+                    color: #eee;
+                    background-color: #c1c1c1;
+                    color: transparent;
+                    text-shadow: 1px 1px 2px rgb(255 255 255 / 80%);
+                    -webkit-background-clip: text;
+                    -moz-background-clip: text;
+                    background-clip: text
+                ">step_into</span>
+            </div>
             <div class="placeholder"></div>
             <section>
-                <div class="snap">
-                    <div class="ticket" style="width: 80vw; max-width: 600px;">
+                <div class="snap" id="home_ticket">
+                    <div class="ticket done" style="width: 80vw; max-width: 600px;">
                         <div class="linklist" style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
                             <img class="profilepic" src="{{ session.get('pic') }}" style="margin: 8px; margin-right: 24px; clip-path: circle();">
                             <div class="linklist" style="margin: 0; flex-direction: column; display: flex; align-items: baseline;">
@@ -105,14 +66,6 @@
                             <span class="stat key">Точность</span>
                             <span class="stat" id="stats-correct"></span>
                         </div>
-                        <script>
-                            var stats_exams_started = parseInt(document.getElementById("stats_exams_started").innerHTML);
-                            var stats_exams_completed = parseInt(document.getElementById("stats_exams_completed").innerHTML);
-                            var stats_exams_perfect = parseInt(document.getElementById("stats_exams_perfect").innerHTML);
-                            var stats_questions = parseInt(document.getElementById("stats_questions").innerHTML);
-                            var stats_correct = parseInt(document.getElementById("stats_correct").innerHTML);
-                            update_stats();
-                        </script>
                     </div>
                 </div>
             </section>

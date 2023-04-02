@@ -12,10 +12,9 @@ from google.oauth2 import id_token
 from googletrans import Translator
 
 app = Flask(__name__)
-app.secret_key = b'445c1e98c90420acbf41320ff5f89674f75f18d345fd25fc267bb03afb40c136'
+app.secret_key = os.environ.get("DATABASE_URL").encode()
 
 translator = Translator(['translate.google.com'])
-postgres = psycopg2.connect(os.environ.get("DATABASE_URL"))
 
 class Ticket:
     def __init__(self, id, image, question, answers, desc, correct_answer, **kwargs):
@@ -83,40 +82,6 @@ def login_required(view):
 @app.route("/")
 @login_required
 def index():
-    with postgres.cursor() as cursor:
-        cursor.execute(
-            f"""
-            SELECT * FROM public.stats
-            WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
-            """
-        )
-        res = cursor.fetchone()
-        if res:
-            session['stats-started'] = res[1]
-            session['stats-completed'] = res[2]
-            session['stats-perfect'] = res[3]
-            session['stats-questions'] = res[4]
-            session['stats-correct'] = res[5]
-        else:
-            session['stats-started'] = 0
-            session['stats-completed'] = 0
-            session['stats-perfect'] = 0
-            session['stats-questions'] = 0
-            session['stats-correct'] = 0
-            cursor.execute(
-                f"""
-                INSERT INTO public.stats (email, started, completed, perfect, questions, correct)
-                VALUES (
-                    '{session.get('user', 'twicebyte@gmail.com')}',
-                    {session.get('stats-started', 0)},
-                    {session.get('stats-completed', 0)},
-                    {session.get('stats-perfect', 0)},
-                    {session.get('stats-questions', 0)},
-                    {session.get('stats-correct', 0)}
-                )
-                """
-            )
-            postgres.commit()
     return render_template('index.html', str=str, int=int)
 
 @app.route("/privacy")
@@ -128,6 +93,32 @@ def privacy():
 def send_report(path):
     return send_from_directory('.well-known', path)
 
+@app.route("/stats", methods=["GET"])
+@login_required
+def obtain_stats():
+    with psycopg2.connect(os.environ.get("DATABASE_URL")) as postgres:
+        with postgres.cursor() as cursor:
+            cursor.execute(
+                f"""
+                SELECT * FROM public.stats
+                WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
+                """
+            )
+            res = cursor.fetchone()
+            session['stats-started'] = res[1]
+            session['stats-completed'] = res[2]
+            session['stats-perfect'] = res[3]
+            session['stats-questions'] = res[4]
+            session['stats-correct'] = res[5]
+
+    return jsonify({
+        "started": session['stats-started'],
+        "completed": session['stats-completed'],
+        "perfect": session['stats-perfect'],
+        "questions": session['stats-questions'],
+        "correct": session['stats-correct']
+    })
+
 @app.route("/stats", methods=["POST"])
 @login_required
 def stats():
@@ -137,20 +128,21 @@ def stats():
     session['stats-questions'] = request.json['questions']
     session['stats-correct'] = request.json['correct']
 
-    with postgres.cursor() as cursor:
-        cursor.execute(
-            f"""
-            UPDATE public.stats
-            SET
-                started={session.get('stats-started', 0)},
-                completed={session.get('stats-completed', 0)},
-                perfect={session.get('stats-perfect', 0)},
-                questions={session.get('stats-questions', 0)},
-                correct={session.get('stats-correct', 0)}
-            WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
-            """
-        )
-        postgres.commit()
+    with psycopg2.connect(os.environ.get("DATABASE_URL")) as postgres:
+        with postgres.cursor() as cursor:
+            cursor.execute(
+                f"""
+                UPDATE public.stats
+                SET
+                    started={session.get('stats-started', 0)},
+                    completed={session.get('stats-completed', 0)},
+                    perfect={session.get('stats-perfect', 0)},
+                    questions={session.get('stats-questions', 0)},
+                    correct={session.get('stats-correct', 0)}
+                WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
+                """
+            )
+            postgres.commit()
     return jsonify({})
 
 
@@ -158,45 +150,41 @@ def stats():
 def login():
     token = request.form.get("credential")
     try:
-        CLIENT_ID = "703660434308-94po6fdl0t8hc54dmb416vktufkp2qi7.apps.googleusercontent.com"
+        CLIENT_ID = os.environ.get("GOOGLE_AUTH_CLIENT_ID")
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
         print(idinfo)
         session['user'] = idinfo['email']
         session['pic'] = idinfo['picture']
-        with postgres.cursor() as cursor:
-            cursor.execute(
-                f"""
-                SELECT * FROM public.stats
-                WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
-                """
-            )
-            res = cursor.fetchone()
-            if res:
-                session['stats-started'] = res[1]
-                session['stats-completed'] = res[2]
-                session['stats-perfect'] = res[3]
-                session['stats-questions'] = res[4]
-                session['stats-correct'] = res[5]
-            else:
-                session['stats-started'] = 0
-                session['stats-completed'] = 0
-                session['stats-perfect'] = 0
-                session['stats-questions'] = 0
-                session['stats-correct'] = 0
+        with psycopg2.connect(os.environ.get("DATABASE_URL")) as postgres:
+            with postgres.cursor() as cursor:
                 cursor.execute(
                     f"""
-                    INSERT INTO public.stats (email, started, completed, perfect, questions, correct)
-                    VALUES (
-                        '{session.get('user', 'twicebyte@gmail.com')}',
-                        {session.get('stats-started', 0)},
-                        {session.get('stats-completed', 0)},
-                        {session.get('stats-perfect', 0)},
-                        {session.get('stats-questions', 0)},
-                        {session.get('stats-correct', 0)}
-                    )
+                    SELECT * FROM public.stats
+                    WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
                     """
                 )
-                postgres.commit()
+                res = cursor.fetchone()
+                if res:
+                    session['stats-started'] = res[1]
+                    session['stats-completed'] = res[2]
+                    session['stats-perfect'] = res[3]
+                    session['stats-questions'] = res[4]
+                    session['stats-correct'] = res[5]
+                else:
+                    session['stats-started'] = 0
+                    session['stats-completed'] = 0
+                    session['stats-perfect'] = 0
+                    session['stats-questions'] = 0
+                    session['stats-correct'] = 0
+                    cursor.execute(
+                        f"""
+                        INSERT INTO public.stats (email, started, completed, perfect, questions, correct)
+                        VALUES (
+                            '{session.get('user', 'twicebyte@gmail.com')}', 0, 0, 0, 0, 0
+                        )
+                        """
+                    )
+                    postgres.commit()
     except ValueError:
         print('login failed')
         pass
@@ -225,49 +213,34 @@ def logout():
 
 @app.before_first_request
 def prepare_db():
-
-    with postgres.cursor() as cursor:
-        cursor.execute(
-            """
-            SELECT EXISTS (
-                SELECT FROM
-                    pg_tables
-                WHERE
-                    schemaname = 'public' AND
-                    tablename  = 'stats'
-            )
-            """
-        )
-        res = cursor.fetchone()
-        if not res[0]:
+    with psycopg2.connect(os.environ.get("DATABASE_URL")) as postgres:
+        with postgres.cursor() as cursor:
             cursor.execute(
                 """
-                CREATE TABLE public.stats (
-                    email VARCHAR(255) PRIMARY KEY,
-                    started INT,
-                    completed INT,
-                    perfect INT,
-                    questions INT,
-                    correct INT
+                SELECT EXISTS (
+                    SELECT FROM
+                        pg_tables
+                    WHERE
+                        schemaname = 'public' AND
+                        tablename  = 'stats'
                 )
                 """
             )
-            postgres.commit()
-        else:
-            cursor.execute(
-                """
-                DROP TABLE public.stats;
-                CREATE TABLE public.stats (
-                    email VARCHAR(255) PRIMARY KEY,
-                    started INT,
-                    completed INT,
-                    perfect INT,
-                    questions INT,
-                    correct INT
+            res = cursor.fetchone()
+            if not res[0]:
+                cursor.execute(
+                    """
+                    CREATE TABLE public.stats (
+                        email VARCHAR(255) PRIMARY KEY,
+                        started INT,
+                        completed INT,
+                        perfect INT,
+                        questions INT,
+                        correct INT
+                    )
+                    """
                 )
-                """
-            )
-            postgres.commit()
+                postgres.commit()
 
 
 if __name__ == "__main__":

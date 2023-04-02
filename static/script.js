@@ -3,6 +3,81 @@ var done = 0;
 var correct = 0;
 var allnum = 0;
 
+
+var stats_exams_started = 0;
+var stats_exams_completed = 0;
+var stats_exams_perfect = 0;
+var stats_questions = 0;
+var stats_correct = 0;
+
+function add_started() {
+    stats_exams_started += 1;
+    send_stats();
+};
+
+function add_exam() {
+    stats_exams += 1;
+    if (correct == allnum)
+        stats_exams_perfect += 1;
+    send_stats();
+};
+
+function add_incorrect() {
+    stats_questions += 1;
+    send_stats();
+};
+
+function add_correct() {
+    stats_questions += 1;
+    stats_correct += 1;
+    send_stats();
+};
+
+function update_stats() {
+    document.getElementById("stats-started").innerHTML = stats_exams_started;
+    document.getElementById("stats-completed").innerHTML = stats_exams_completed + " (" + Math.round(100 * stats_exams_completed / stats_exams_started) + " %)";
+    document.getElementById("stats-perfect").innerHTML = stats_exams_perfect + " (" + Math.round(100 * stats_exams_perfect / stats_exams_completed) + " %)";
+    document.getElementById("stats-questions").innerHTML = stats_questions;
+    document.getElementById("stats-correct").innerHTML = Math.round(100 * stats_correct / stats_questions) + " %";
+
+};
+
+
+function send_stats() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/stats", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+        "started": stats_exams_started,
+        "completed": stats_exams_completed,
+        "perfect": stats_exams_perfect,
+        "questions": stats_questions,
+        "correct": stats_correct
+    }));
+    update_stats();
+};
+
+function get_stats() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/stats');
+    //Set payload to element text
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange  = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            payload = JSON.parse(this.responseText);
+
+            stats_exams_started = payload.started;
+            stats_exams_completed = payload.completed;
+            stats_exams_perfect = payload.perfect;
+            stats_questions = payload.questions;
+            stats_correct = payload.correct;
+
+            update_stats();
+        }
+    };
+    xhr.send();
+}
+
 function logout(element) {
     window.location.href = '/logout';
 
@@ -10,7 +85,7 @@ function logout(element) {
 
 function scrollnext(element) {
     element.parentElement.parentElement.nextElementSibling.scrollIntoView(
-        {behavior: "smooth", block: "center", inline: "center"}
+        {behavior: "smooth", block: "start", inline: "center"}
     )
 };
 
@@ -32,6 +107,18 @@ function answerclick(element) {
         document.getElementById('header').style.backgroundImage = 'linear-gradient(to right, #f2fff2 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (done / allnum * 100) + '%, #ffffff ' + (done / allnum * 100) + '%, #ffffff 100%)';
     }
 };
+
+function scroll_to_active() {
+    for (var el of document.querySelectorAll('.ticket')) {
+        if (!el.classList.contains('done')) {
+            el.parentElement.scrollIntoView(
+                {behavior: "smooth", block: "start", inline: "center"}
+            );
+            break;
+        }
+    };
+}
+
 
 function keyhandler(event) {
     // Scroll to next ticket element if pressed space
@@ -132,6 +219,7 @@ if ("serviceWorker" in navigator) {
 
 const stack = document.getElementById('stack');
 
+
 function translate_desc(element) {
     let descinfo = element.querySelector('.descinfo');
     let descraw = element.querySelector('.descraw');
@@ -181,6 +269,7 @@ function recreate() {
             var data = JSON.parse(this.responseText);
             allnum = data.length;
             add_started();
+            document.getElementById('scroll_float').classList.remove('hidden');
             document.getElementById('header').style.backgroundImage = 'linear-gradient(to right, #f2fff2 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (done / allnum * 100) + '%, #ffffff ' + (done / allnum * 100) + '%, #ffffff 100%)';
 
             for (var i = 0; i < data.length; i++) {
@@ -238,7 +327,16 @@ function recreate() {
 
 };
 
-// document.addEventListener("DOMContentLoaded", () => {
-//     console.log("Starting content assembly")
-//     recreate();
-// });
+function home() {
+
+    home_ticket = document.getElementById('home_ticket');
+
+    home_ticket.scrollIntoView(
+        {behavior: "smooth", block: "center", inline: "center"}
+    );
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    home();
+    get_stats();
+});
