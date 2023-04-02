@@ -92,19 +92,25 @@ def index():
         )
         res = cursor.fetchone()
         if res:
-            session['stats-exams'] = res[1]
-            session['stats-questions'] = res[2]
-            session['stats-correct'] = res[3]
+            session['stats-started'] = res[1]
+            session['stats-completed'] = res[2]
+            session['stats-perfect'] = res[3]
+            session['stats-questions'] = res[4]
+            session['stats-correct'] = res[5]
         else:
-            session['stats-exams'] = 0
+            session['stats-started'] = 0
+            session['stats-completed'] = 0
+            session['stats-perfect'] = 0
             session['stats-questions'] = 0
             session['stats-correct'] = 0
             cursor.execute(
                 f"""
-                INSERT INTO public.stats (email, exams, questions, correct)
+                INSERT INTO public.stats (email, started, completed, perfect, questions, correct)
                 VALUES (
                     '{session.get('user', 'twicebyte@gmail.com')}',
-                    {session.get('stats-exams', 0)},
+                    {session.get('stats-started', 0)},
+                    {session.get('stats-completed', 0)},
+                    {session.get('stats-perfect', 0)},
                     {session.get('stats-questions', 0)},
                     {session.get('stats-correct', 0)}
                 )
@@ -125,7 +131,9 @@ def send_report(path):
 @app.route("/stats", methods=["POST"])
 @login_required
 def stats():
-    session['stats-exams'] = request.json['exams']
+    session['stats-started'] = request.json['started']
+    session['stats-completed'] = request.json['completed']
+    session['stats-perfect'] = request.json['perfect']
     session['stats-questions'] = request.json['questions']
     session['stats-correct'] = request.json['correct']
 
@@ -133,7 +141,10 @@ def stats():
         cursor.execute(
             f"""
             UPDATE public.stats
-            SET exams={session.get('stats-exams', 0)},
+            SET
+                started={session.get('stats-started', 0)},
+                completed={session.get('stats-completed', 0)},
+                perfect={session.get('stats-perfect', 0)},
                 questions={session.get('stats-questions', 0)},
                 correct={session.get('stats-correct', 0)}
             WHERE email='{session.get('user', 'twicebyte@gmail.com')}'
@@ -161,19 +172,25 @@ def login():
             )
             res = cursor.fetchone()
             if res:
-                session['stats-exams'] = res[1]
-                session['stats-questions'] = res[2]
-                session['stats-correct'] = res[3]
+                session['stats-started'] = res[1]
+                session['stats-completed'] = res[2]
+                session['stats-perfect'] = res[3]
+                session['stats-questions'] = res[4]
+                session['stats-correct'] = res[5]
             else:
-                session['stats-exams'] = 0
+                session['stats-started'] = 0
+                session['stats-completed'] = 0
+                session['stats-perfect'] = 0
                 session['stats-questions'] = 0
                 session['stats-correct'] = 0
                 cursor.execute(
                     f"""
-                    INSERT INTO public.stats (email, exams, questions, correct)
+                    INSERT INTO public.stats (email, started, completed, perfect, questions, correct)
                     VALUES (
                         '{session.get('user', 'twicebyte@gmail.com')}',
-                        {session.get('stats-exams', 0)},
+                        {session.get('stats-started', 0)},
+                        {session.get('stats-completed', 0)},
+                        {session.get('stats-perfect', 0)},
                         {session.get('stats-questions', 0)},
                         {session.get('stats-correct', 0)}
                     )
@@ -227,13 +244,31 @@ def prepare_db():
                 """
                 CREATE TABLE public.stats (
                     email VARCHAR(255) PRIMARY KEY,
-                    exams INT,
+                    started INT,
+                    completed INT,
+                    perfect INT,
                     questions INT,
                     correct INT
                 )
                 """
             )
             postgres.commit()
+        else:
+            cursor.execute(
+                """
+                DROP TABLE public.stats;
+                CREATE TABLE public.stats (
+                    email VARCHAR(255) PRIMARY KEY,
+                    started INT,
+                    completed INT,
+                    perfect INT,
+                    questions INT,
+                    correct INT
+                )
+                """
+            )
+            postgres.commit()
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

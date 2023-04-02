@@ -154,6 +154,10 @@ function translate_desc(element) {
 function recreate() {
     stack.innerHTML = '';
 
+    done = 0;
+    correct = 0;
+    allnum = 0;
+
     var modal = document.createElement('div');
     modal.classList.add('ticket');
     var loader = document.createElement('div');
@@ -176,6 +180,9 @@ function recreate() {
             stack.removeChild(modal);
             var data = JSON.parse(this.responseText);
             allnum = data.length;
+            add_started();
+            document.getElementById('header').style.backgroundImage = 'linear-gradient(to right, #f2fff2 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (correct / allnum * 100) + '%, #fff1f1 ' + (done / allnum * 100) + '%, #ffffff ' + (done / allnum * 100) + '%, #ffffff 100%)';
+
             for (var i = 0; i < data.length; i++) {
                 var ticket = data[i];
                 var element = document.createElement('div');

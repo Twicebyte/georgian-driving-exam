@@ -14,41 +14,58 @@
     </head>
     <body>
         <script>
-            var stats_exams = {{ session.get('stats-exams', 0) }};
-            var stats_questions = {{ session.get('stats-questions', 0) }};
-            var stats_correct = {{ session.get('stats-correct', 0) }};
+
+            function add_started() {
+                stats_exams_started += 1;
+                send_stats();
+            };
 
             function add_exam() {
                 stats_exams += 1;
+                if (correct == allnum)
+                    stats_exams_perfect += 1;
                 send_stats();
-            }
+            };
 
             function add_incorrect() {
                 stats_questions += 1;
                 send_stats();
-            }
+            };
 
             function add_correct() {
                 stats_questions += 1;
                 stats_correct += 1;
                 send_stats();
-            }
+            };
+
+            function update_stats() {
+                document.getElementById("stats-started").innerHTML = stats_exams_started;
+                document.getElementById("stats-completed").innerHTML = stats_exams_completed + " (" + Math.round(100 * stats_exams_completed / stats_exams_started) + " %)";
+                document.getElementById("stats-perfect").innerHTML = stats_exams_perfect + " (" + Math.round(100 * stats_exams_perfect / stats_exams_completed) + " %)";
+                document.getElementById("stats-questions").innerHTML = stats_questions;
+                document.getElementById("stats-correct").innerHTML = Math.round(100 * stats_correct / stats_questions) + " %";
+
+            };
 
             function send_stats() {
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/stats", true);
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.send(JSON.stringify({
-                    "exams": stats_exams,
+                    "started": stats_exams_started,
+                    "completed": stats_exams_completed,
+                    "perfect": stats_exams_perfect,
                     "questions": stats_questions,
                     "correct": stats_correct
                 }));
-                document.getElementById("stats-exams").innerHTML = stats_exams;
-                document.getElementById("stats-questions").innerHTML = stats_questions;
-                document.getElementById("stats-correct").innerHTML = Math.round(100 * stats_correct / stats_questions) + " %";
-            }
+            };
         </script>
         <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+        <data class="hidden" id="stats_exams_started">{{ session.get('stats-started', 0) }}</data>
+        <data class="hidden" id="stats_exams_completed">{{ session.get('stats-completed', 0) }}</data>
+        <data class="hidden" id="stats_exams_perfect">{{ session.get('stats-perfect', 0) }}</data>
+        <data class="hidden" id="stats_questions">{{ session.get('stats-questions', 0) }}</data>
+        <data class="hidden" id="stats_correct">{{ session.get('stats-correct', 0) }}</data>
         <div class="header" id="header">
             <h1>Georgian Driving Exam</h1>
         </div>
@@ -57,13 +74,7 @@
             <section>
                 <div class="snap">
                     <div class="ticket" style="width: 80vw; max-width: 600px;">
-
-                        <div class="linklist" style="
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-                            justify-content: center;
-                        ">
+                        <div class="linklist" style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
                             <img class="profilepic" src="{{ session.get('pic') }}" style="margin: 8px; margin-right: 24px; clip-path: circle();">
                             <div class="linklist" style="margin: 0; flex-direction: column; display: flex; align-items: baseline;">
                                 <h2>Меню</h2>
@@ -75,14 +86,33 @@
                             </div>
                         </div>
                         <div class="linklist" style="margin: 8px;">
-                            <span class="stat key">Пройдено наборов</span><span class="stat" id="stats-exams">{{ session.get('stats-exams', 0) }}</span>
+                            <span class="stat key">Начато</span>
+                            <span class="stat" id="stats-started"></span>
                         </div>
                         <div class="linklist" style="margin: 8px;">
-                            <span class="stat key">Пройдено вопросов</span><span class="stat" id="stats-questions">{{ session.get('stats-questions', 0) }}</span>
+                            <span class="stat key">Пройдено</span>
+                            <span class="stat" id="stats-completed"></span>
                         </div>
                         <div class="linklist" style="margin: 8px;">
-                            <span class="stat key">Точность</span><span class="stat" id="stats-correct">{{ str(int(100 * session.get('stats-correct', 0) / session.get('stats-questions', 0))) + " %" if session.get('stats-questions', 0) else 'N/A' }}</span>
+                            <span class="stat key">Идеально</span>
+                            <span class="stat" id="stats-perfect"></span>
                         </div>
+                        <div class="linklist" style="margin: 8px;">
+                            <span class="stat key">Билеты</span>
+                            <span class="stat" id="stats-questions"></span>
+                        </div>
+                        <div class="linklist" style="margin: 8px;">
+                            <span class="stat key">Точность</span>
+                            <span class="stat" id="stats-correct"></span>
+                        </div>
+                        <script>
+                            var stats_exams_started = parseInt(document.getElementById("stats_exams_started").innerHTML);
+                            var stats_exams_completed = parseInt(document.getElementById("stats_exams_completed").innerHTML);
+                            var stats_exams_perfect = parseInt(document.getElementById("stats_exams_perfect").innerHTML);
+                            var stats_questions = parseInt(document.getElementById("stats_questions").innerHTML);
+                            var stats_correct = parseInt(document.getElementById("stats_correct").innerHTML);
+                            update_stats();
+                        </script>
                     </div>
                 </div>
             </section>
@@ -90,12 +120,7 @@
                 <div class="snap">
                     <div class="ticket">
                         <div class="linklist" style="align-items: center;">
-                            <span class="material-symbols-rounded" style="
-                                margin: 8px;
-                                font-size: xxx-large;
-                                color: #2cbd2c;
-                                text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
-                            ">play_arrow</span>
+                            <span class="material-symbols-rounded" style="margin: 8px; font-size: xxx-large; color: #2cbd2c; text-shadow: 1px 1px 4px rgba(0,0,0,0.2);">play_arrow</span>
                             <span class="nextexam" onclick="recreate()">
                                 Начать экзамен
                             </span>
